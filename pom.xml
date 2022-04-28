@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.erstedigital</groupId>
-    <artifactId>meeting-app-java</artifactId>
+    <artifactId>meeting-app-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>meeting-app-java</name>
+    <name>meeting-app-backend</name>
     <description>meeting-app-java</description>
     <properties>
         <java.version>11</java.version>
@@ -43,6 +43,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.4.1</version>
             </plugin>
         </plugins>
     </build>
