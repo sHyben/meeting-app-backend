@@ -7,6 +7,7 @@ services:
     container_name: meetingapp-db
     environment:
       - MYSQL_ROOT_PASSWORD=spring
+      - MYSQL_DATABASE=meetingapp-db
     ports:
       - "3306:3306"
     restart: always
@@ -39,7 +40,7 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_JPA_HIBERNATE_DLL-AUTO: create-drop
-      SPRING_DATASOURCE_URL: jdbc:mysql://meetingapp-db:3306/meetingapp-db?createDatabaseIfNotExist=true
+      #SPRING_JPA_HIBERNATE_DLL-AUTO: create-drop
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/meetingapp-db?useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: spring
