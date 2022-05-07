@@ -1,85 +1,52 @@
 package com.erstedigital.meetingappbackend.rest.controller;
 
-import com.erstedigital.meetingappbackend.persistence.data.AgendaPoint;
-import com.erstedigital.meetingappbackend.persistence.repository.AgendaPointRepository;
-import com.erstedigital.meetingappbackend.persistence.repository.AgendaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.rest.data.request.AgendaPointRequest;
+import com.erstedigital.meetingappbackend.rest.data.response.AgendaPointResponse;
+import com.erstedigital.meetingappbackend.rest.service.AgendaPointService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Time;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
-@RequestMapping(path="/agendaPoints")
+@RequestMapping(path="/agendaPoint")
 public class AgendaPointController {
-    private AgendaPointRepository agendaPointRepository;
-    private AgendaRepository agendaRepository;
+    private final AgendaPointService agendaPointService;
 
-    @GetMapping(path="/all")
+    public AgendaPointController(AgendaPointService agendaPointService) {
+        this.agendaPointService = agendaPointService;
+    }
+
+    @GetMapping
     public @ResponseBody
-    Iterable<AgendaPoint> getAllAgendaPoints() {
-        return agendaPointRepository.findAll();
+    List<AgendaPointResponse> getAllAgendaPoints() {
+        return agendaPointService.getAll().stream().map(AgendaPointResponse::new).collect(Collectors.toList());
     }
 
-    @GetMapping(value = "/findById")
+    @GetMapping(value = "/{id}")
     public @ResponseBody
-    Optional<AgendaPoint> getAgendaPointById(@RequestParam(value = "id") Integer id) {
-        return agendaPointRepository.findById(id);
+    AgendaPointResponse getAgendaPointById(@PathVariable("id") Integer id) throws NotFoundException {
+        return new AgendaPointResponse(agendaPointService.findById(id));
     }
 
-    @PostMapping(path="/add")
-    public @ResponseBody String addNewAgendaPoint(@RequestParam Integer number, @RequestParam String title,
-                                                  @RequestParam String description, @RequestParam Time duration,
-                                                  @RequestParam String status, @RequestParam Integer agendaId) {
-        AgendaPoint agendaPoint = new AgendaPoint();
-        agendaPoint.setNumber(number);
-        agendaPoint.setTitle(title);
-        agendaPoint.setDescription(description);
-        agendaPoint.setDuration(duration);
-        agendaPoint.setStatus(status);
-        if(agendaRepository.findById(agendaId).isPresent()) {
-            agendaPoint.setAgenda_points_id(agendaRepository.findById(agendaId).get());
-        }
-
-        agendaPointRepository.save(agendaPoint);
-        return "Saved";
+    @PostMapping
+    public @ResponseBody
+    ResponseEntity<AgendaPointResponse> addNewAgendaPoint(@RequestBody AgendaPointRequest body) throws NotFoundException {
+        return new ResponseEntity<>(new AgendaPointResponse(agendaPointService.create(body)), HttpStatus.CREATED);
     }
 
-    @PutMapping(path="/update")
-    public @ResponseBody String updateUser(@RequestParam Integer id, @RequestParam Optional<Integer> number,
-                                           @RequestParam Optional<String> title, @RequestParam Optional<String> description,
-                                           @RequestParam Optional<Time> duration, @RequestParam Optional<String> status,
-                                           @RequestParam Optional<Integer> agendaId) {
-        AgendaPoint agendaPoint = agendaPointRepository.getById(id);
-        number.ifPresent(agendaPoint::setNumber);
-        title.ifPresent(agendaPoint::setTitle);
-        description.ifPresent(agendaPoint::setDescription);
-        duration.ifPresent(agendaPoint::setDuration);
-        status.ifPresent(agendaPoint::setStatus);
-        agendaId.ifPresent(integer -> agendaPoint.setAgenda_points_id(agendaRepository.getById(integer)));
-
-        agendaPointRepository.save(agendaPoint);
-        return "Updated";
+    @PutMapping(path="/{id}")
+    public @ResponseBody AgendaPointResponse updateAgendaPoint(@PathVariable("id") Integer id, @RequestBody AgendaPointRequest body) throws NotFoundException {
+        return new AgendaPointResponse(agendaPointService.update(id, body));
     }
 
-    @DeleteMapping(path="/delete")
-    public @ResponseBody String deleteUser (@RequestParam Integer id) {
-        if(getAgendaPointById(id).isPresent()) {
-            agendaPointRepository.delete(getAgendaPointById(id).get());
-        }
-
-        return "Deleted";
-    }
-
-    @Autowired
-    private void setAgendaPointRepository(AgendaPointRepository agendaPointRepository) {
-        this.agendaPointRepository = agendaPointRepository;
-    }
-
-    @Autowired
-    private void setAgendaRepository(AgendaRepository agendaRepository) {
-        this.agendaRepository = agendaRepository;
+    @DeleteMapping(path="/{id}")
+    public @ResponseBody void deleteAgendaPoint(@PathVariable("id") Integer id) throws NotFoundException {
+        agendaPointService.delete(id);
     }
 }
 

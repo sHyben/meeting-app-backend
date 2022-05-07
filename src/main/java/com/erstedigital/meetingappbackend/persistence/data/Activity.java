@@ -1,14 +1,24 @@
 package com.erstedigital.meetingappbackend.persistence.data;
 
+import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.rest.data.request.ActivityRequest;
+import lombok.*;
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "activities")
 public class Activity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
     private String type;
@@ -18,53 +28,42 @@ public class Activity {
     private String img_url;
 
     @OneToMany(mappedBy="activity_id")
-    private List<Meeting> meetings = new ArrayList<>();
+    @ToString.Exclude
+    private List<Meeting> meetings;
 
-    public Integer getId() {
-        return id;
+    public Activity(ActivityRequest request) {
+        this.type = request.getType();
+        this.title = request.getTitle();
+        this.text = request.getText();
+        this.answer = request.getAnswer();
+        this.img_url = request.getImg_url();
+        this.meetings = new ArrayList<>();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void addMeeting(Meeting meeting) throws NotFoundException {
+        if(meeting != null) {
+            this.meetings.add(meeting);
+        } else {
+            throw new NotFoundException();
+        }
     }
 
-    public String getType() {
-        return type;
+    public void removeMeeting(Meeting meeting) {
+        if(meeting != null) {
+            this.meetings.remove(meeting);
+        }
     }
 
-    public void setType(String type) {
-        this.type = type;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Activity activity = (Activity) o;
+        return id != null && Objects.equals(id, activity.id);
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public String getImg_url() {
-        return img_url;
-    }
-
-    public void setImg_url(String img_url) {
-        this.img_url = img_url;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

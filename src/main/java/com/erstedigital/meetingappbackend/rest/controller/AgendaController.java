@@ -1,68 +1,53 @@
 package com.erstedigital.meetingappbackend.rest.controller;
 
-import com.erstedigital.meetingappbackend.persistence.data.Agenda;
-import com.erstedigital.meetingappbackend.persistence.repository.AgendaRepository;
-import com.erstedigital.meetingappbackend.persistence.repository.MeetingRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.rest.data.request.AgendaRequest;
+import com.erstedigital.meetingappbackend.rest.data.response.AgendaResponse;
+import com.erstedigital.meetingappbackend.rest.service.AgendaService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
-@RequestMapping(path="/agendas")
+@RequestMapping(path="/agenda")
 public class AgendaController {
-    private AgendaRepository agendaRepository;
-    private MeetingRepository meetingRepository;
+    private final AgendaService agendaService;
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<Agenda> getAllAgendas() {
-        return agendaRepository.findAll();
+    public AgendaController(AgendaService agendaService) {
+        this.agendaService = agendaService;
     }
 
-    @GetMapping(value = "/findById")
+    @GetMapping
     public @ResponseBody
-    Optional<Agenda> getAgendaById(@RequestParam(value = "id") Integer id) {
-        return agendaRepository.findById(id);
+    List<AgendaResponse> getAllAgendas() {
+        return agendaService.getAll().stream().map(AgendaResponse::new).collect(Collectors.toList());
     }
 
-    @PostMapping(path="/add")
-    public @ResponseBody String addNewAgenda(@RequestParam Integer meetingId) {
-        Agenda agenda = new Agenda();
-        if(meetingRepository.findById(meetingId).isPresent()) {
-            agenda.setAgenda_meeting(meetingRepository.findById(meetingId).get());
-        }
-
-        agendaRepository.save(agenda);
-        return "Saved";
+    @GetMapping(value = "/{id}")
+    public @ResponseBody
+    AgendaResponse getAgendaById(@PathVariable("id") Integer id) throws NotFoundException {
+        return new AgendaResponse(agendaService.findById(id));
     }
 
-    @PutMapping(path="/update")
-    public @ResponseBody String updateAgenda(@RequestParam Integer id, @RequestParam Optional<Integer> meetingId) {
-        Agenda agenda = agendaRepository.getById(id);
-        meetingId.ifPresent(integer -> agenda.setAgenda_meeting(meetingRepository.getById(integer)));
-
-        agendaRepository.save(agenda);
-        return "Updated";
+    @PostMapping
+    public @ResponseBody
+    ResponseEntity<AgendaResponse> addNewAgenda(@RequestBody AgendaRequest body) throws NotFoundException {
+        return new ResponseEntity<>(new AgendaResponse(agendaService.create(body)), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path="/delete")
-    public @ResponseBody String deleteAgenda(@RequestParam Integer id) {
-        if(getAgendaById(id).isPresent()) {
-            agendaRepository.delete(getAgendaById(id).get());
-        }
-
-        return "Deleted";
+    @PutMapping(path="/{id}")
+    public @ResponseBody
+    AgendaResponse updateAgenda(@PathVariable("id") Integer id, @RequestBody AgendaRequest body) throws NotFoundException {
+        return new AgendaResponse(agendaService.update(id, body));
     }
 
-    @Autowired
-    private void setAgendaRepository(AgendaRepository agendaRepository) {
-        this.agendaRepository = agendaRepository;
-    }
-    
-    @Autowired
-    public void setMeetingRepository(MeetingRepository meetingRepository) {
-        this.meetingRepository = meetingRepository;
+    @DeleteMapping(path="/{id}")
+    public @ResponseBody void deleteAgenda(@PathVariable("id") Integer id) throws NotFoundException {
+        agendaService.delete(id);
     }
 }
 

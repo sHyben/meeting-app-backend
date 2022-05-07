@@ -1,41 +1,48 @@
 package com.erstedigital.meetingappbackend.persistence.data;
 
+import lombok.*;
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "agendas")
 public class Agenda {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToMany(mappedBy="agenda_points_id")
-    private List<AgendaPoint> agenda_points = new ArrayList<>();
+    @OneToMany(mappedBy="agenda_id")
+    @ToString.Exclude
+    private List<AgendaPoint> agenda_points;
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
     private Meeting agenda_meeting;
 
-    public Integer getId() {
-        return id;
+    public Agenda(Meeting meeting) {
+        agenda_points = new ArrayList<>();
+        this.agenda_meeting = meeting;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Agenda agenda = (Agenda) o;
+        return id != null && Objects.equals(id, agenda.id);
     }
 
-    public List<AgendaPoint> getAgenda_points() {
-        return agenda_points;
-    }
-
-    public void setAgenda_points(List<AgendaPoint> agenda_points) {
-        this.agenda_points = agenda_points;
-    }
-
-    public void setAgenda_meeting(Meeting agenda_meeting) {
-        this.agenda_meeting = agenda_meeting;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
