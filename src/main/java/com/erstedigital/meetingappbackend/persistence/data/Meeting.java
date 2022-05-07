@@ -1,23 +1,34 @@
 package com.erstedigital.meetingappbackend.persistence.data;
 
-import java.sql.Time;
-import java.util.*;
+import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "meetings")
 public class Meeting {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
+    private String exchange_id;
     private String meeting_type;
     private Date start_date;
     private Time start_time;
     private Time duration;
     private Time actual_duration;
-    private int meeting_cost;
+    private Integer meeting_cost;
     private String notes_url;
 
     @ManyToOne
@@ -25,10 +36,12 @@ public class Meeting {
     private User organizer;
 
     @OneToMany(mappedBy="agenda_meeting")
-    private List<Agenda> agendas = new ArrayList<>();
+    @ToString.Exclude
+    private List<Agenda> agendas;
 
     @OneToMany(mappedBy="attendee_meeting")
-    private List<Attendee> attendees = new ArrayList<>();
+    @ToString.Exclude
+    private List<Attendee> attendees;
 
     @ManyToOne
     @JoinColumn(name = "activity_id")
@@ -36,108 +49,32 @@ public class Meeting {
 
     private String url;
 
-
-    public Integer getId() {
-        return id;
+    public Meeting(MeetingRequest request, User user, Activity activity) {
+        this.exchange_id = request.getExchangeId();
+        this.meeting_type = request.getMeetingType();
+        this.start_date = request.getStartDate();
+        this.start_time = request.getStartTime();
+        this.duration = request.getDuration();
+        this.actual_duration = request.getActualDuration();
+        this.meeting_cost = request.getMeetingCost();
+        this.notes_url = request.getNotesUrl();
+        this.organizer = user;
+        this.agendas = new ArrayList<>();
+        this.attendees = new ArrayList<>();
+        this.activity_id = activity;
+        this.url = request.getUrl();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Meeting meeting = (Meeting) o;
+        return id != null && Objects.equals(id, meeting.id);
     }
 
-    public User getOrganizer() {
-        return organizer;
-    }
-
-    public void setOrganizer(User organizer) {
-        this.organizer = organizer;
-    }
-
-    public String getMeeting_type() {
-        return meeting_type;
-    }
-
-    public void setMeeting_type(String meeting_type) {
-        this.meeting_type = meeting_type;
-    }
-
-    public Date getStart_date() {
-        return start_date;
-    }
-
-    public void setStart_date(Date start_date) {
-        this.start_date = start_date;
-    }
-
-    public Time getStart_time() {
-        return start_time;
-    }
-
-    public void setStart_time(Time start_time) {
-        this.start_time = start_time;
-    }
-
-    public Time getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Time duration) {
-        this.duration = duration;
-    }
-
-    public Time getActual_duration() {
-        return actual_duration;
-    }
-
-    public void setActual_duration(Time actual_duration) {
-        this.actual_duration = actual_duration;
-    }
-
-    public int getMeeting_cost() {
-        return meeting_cost;
-    }
-
-    public void setMeeting_cost(int meeting_cost) {
-        this.meeting_cost = meeting_cost;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public List<Agenda> getAgendas() {
-        return agendas;
-    }
-
-    public void setAgendas(List<Agenda> agendas) {
-        this.agendas = agendas;
-    }
-
-    public List<Attendee> getAttendees() {
-        return attendees;
-    }
-
-    public void setAttendees(List<Attendee> attendees) {
-        this.attendees = attendees;
-    }
-
-    public String getNotes_url() {
-        return notes_url;
-    }
-
-    public void setNotes_url(String notes_url) {
-        this.notes_url = notes_url;
-    }
-
-    public Activity getActivity_id() {
-        return activity_id;
-    }
-
-    public void setActivity_id(Activity activity_id) {
-        this.activity_id = activity_id;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

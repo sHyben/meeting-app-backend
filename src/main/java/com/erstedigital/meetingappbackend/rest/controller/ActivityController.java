@@ -1,70 +1,53 @@
 package com.erstedigital.meetingappbackend.rest.controller;
 
-import com.erstedigital.meetingappbackend.persistence.data.Activity;
-import com.erstedigital.meetingappbackend.persistence.repository.ActivityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.rest.data.request.ActivityRequest;
+import com.erstedigital.meetingappbackend.rest.data.response.ActivityResponse;
+import com.erstedigital.meetingappbackend.rest.service.ActivityService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
-@RequestMapping(path="/activities")
+@RequestMapping(path="/activity")
 public class ActivityController {
-    private ActivityRepository activityRepository;
+    private final ActivityService activityService;
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<Activity> getAllActivities() {
-        return activityRepository.findAll();
+    public ActivityController(ActivityService activityService) {
+        this.activityService = activityService;
     }
 
-    @GetMapping(value = "/findById")
+    @GetMapping
     public @ResponseBody
-    Optional<Activity> getActivityById(@RequestParam(value = "id") Integer id) {
-        return activityRepository.findById(id);
+    List<ActivityResponse> getAllActivities() {
+        return activityService.getAll().stream().map(ActivityResponse::new).collect(Collectors.toList());
     }
 
-    @PostMapping(path="/add")
-    public @ResponseBody String addNewActivity(@RequestParam String type, @RequestParam String title,
-                                               @RequestParam String text, @RequestParam String answer,
-                                               @RequestParam String img_url) {
-        Activity activity = new Activity();
-        activity.setType(type);
-        activity.setTitle(title);
-        activity.setText(text);
-        activity.setAnswer(answer);
-        activity.setImg_url(img_url);
-        activityRepository.save(activity);
-        return "Saved";
+    @GetMapping(value = "/{id}")
+    public @ResponseBody
+    ActivityResponse getActivityById(@PathVariable("id") Integer id) throws NotFoundException {
+        return new ActivityResponse(activityService.findById(id));
     }
 
-    @PutMapping(path="/update")
-    public @ResponseBody String updateActivity(@RequestParam Integer id, @RequestParam Optional<String> type,
-                                               @RequestParam Optional<String> title, @RequestParam Optional<String> text,
-                                               @RequestParam Optional<String> answer, @RequestParam Optional<String> img_url) {
-        Activity activity = activityRepository.getById(id);
-        type.ifPresent(activity::setType);
-        title.ifPresent(activity::setTitle);
-        text.ifPresent(activity::setText);
-        answer.ifPresent(activity::setAnswer);
-        img_url.ifPresent(activity::setImg_url);
-
-        activityRepository.save(activity);
-        return "Updated";
+    @PostMapping
+    public @ResponseBody
+    ResponseEntity<ActivityResponse> addNewActivity(@RequestBody ActivityRequest body) {
+        return new ResponseEntity<>(new ActivityResponse(activityService.create(body)), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path="/delete")
-    public @ResponseBody String deleteActivity (@RequestParam Integer id) {
-        if(getActivityById(id).isPresent()) {
-            activityRepository.delete(getActivityById(id).get());
-        }
-
-        return "Deleted";
+    @PutMapping(path="/{id}")
+    public @ResponseBody ActivityResponse updateActivity(@PathVariable("id") Integer id,
+                                                         @RequestBody ActivityRequest body) throws NotFoundException {
+        return new ActivityResponse(activityService.update(id, body));
     }
 
-    @Autowired
-    private void setActivityRepository(ActivityRepository activityRepository) {
-        this.activityRepository = activityRepository;
+    @DeleteMapping(path="/{id}")
+    public @ResponseBody void deleteActivity(@PathVariable("id") Integer id) throws NotFoundException {
+        activityService.delete(id);
     }
 }
 

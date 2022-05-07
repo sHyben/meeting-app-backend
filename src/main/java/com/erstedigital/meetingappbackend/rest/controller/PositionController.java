@@ -1,63 +1,52 @@
 package com.erstedigital.meetingappbackend.rest.controller;
 
-import com.erstedigital.meetingappbackend.persistence.data.Position;
-import com.erstedigital.meetingappbackend.persistence.repository.PositionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.rest.data.request.PositionRequest;
+import com.erstedigital.meetingappbackend.rest.data.response.PositionResponse;
+import com.erstedigital.meetingappbackend.rest.service.PositionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
-@RequestMapping(path="/positions")
+@RequestMapping(path="/position")
 public class PositionController {
-    private PositionRepository positionRepository;
+    private final PositionService positionService;
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<Position> getAllPositions() {
-        return positionRepository.findAll();
+    public PositionController(PositionService positionService) {
+        this.positionService = positionService;
     }
 
-    @GetMapping(value = "/findById")
+    @GetMapping
     public @ResponseBody
-    Optional<Position> getPositionById(@RequestParam(value = "id") Integer id) {
-        return positionRepository.findById(id);
+    List<PositionResponse> getAllPositions() {
+        return positionService.getAll().stream().map(PositionResponse::new).collect(Collectors.toList());
     }
 
-    @PostMapping(path="/add")
-    public @ResponseBody String addNewPosition(@RequestParam String name,
-                                               @RequestParam Integer hourly_cost) {
-        Position position = new Position();
-        position.setName(name);
-        position.setHourly_cost(hourly_cost);
-
-        positionRepository.save(position);
-        return "Saved";
+    @GetMapping(value = "/{id}")
+    public @ResponseBody
+    PositionResponse getPositionById(@PathVariable("id") Integer id) throws NotFoundException {
+        return new PositionResponse(positionService.findById(id));
     }
 
-    @PutMapping(path="/update")
-    public @ResponseBody String updatePosition(@RequestParam Integer id,
-                                               @RequestParam Optional<String> name,
-                                               @RequestParam Optional<Integer> hourly_cost) {
-        Position position = positionRepository.getById(id);
-        name.ifPresent(position::setName);
-        hourly_cost.ifPresent(position::setHourly_cost);
+    @PostMapping
+    public @ResponseBody
+    ResponseEntity<PositionResponse> addNewPosition(@RequestBody PositionRequest body) {
+        return new ResponseEntity<>(new PositionResponse(positionService.create(body)), HttpStatus.CREATED);
+    }
 
-        positionRepository.save(position);
-        return "Updated";
+    @PutMapping(path="/{id}")
+    public @ResponseBody PositionResponse updatePosition(@PathVariable("id") Integer id,
+                                                         @RequestBody PositionRequest body) throws NotFoundException {
+        return new PositionResponse(positionService.update(id, body));
     }
 
     @DeleteMapping(path="/delete")
-    public @ResponseBody String deletePosition(@RequestParam Integer id) {
-        if(getPositionById(id).isPresent()) {
-            positionRepository.delete(getPositionById(id).get());
-        }
-
-        return "Deleted";
-    }
-
-    @Autowired
-    private void setPositionRepository(PositionRepository positionRepository) {
-        this.positionRepository = positionRepository;
+    public @ResponseBody void deletePosition(@RequestParam Integer id) throws NotFoundException {
+        positionService.delete(id);
     }
 }

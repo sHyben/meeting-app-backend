@@ -1,16 +1,25 @@
 package com.erstedigital.meetingappbackend.persistence.data;
 
+import com.erstedigital.meetingappbackend.rest.data.request.AgendaPointRequest;
+import lombok.*;
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.sql.Time;
+import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "agenda_points")
 public class AgendaPoint {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private int number;
+    private Integer number;
     private String title;
     private String description;
     private Time duration;
@@ -18,57 +27,27 @@ public class AgendaPoint {
 
     @ManyToOne
     @JoinColumn(name = "agenda_id")
-    private Agenda agenda_points_id;
+    private Agenda agenda_id;
 
-    public Integer getId() {
-        return id;
+    public AgendaPoint(AgendaPointRequest request, Agenda agenda) {
+        this.number = request.getNumber();
+        this.title = request.getTitle();
+        this.description = request.getDescription();
+        this.duration = request.getDuration();
+        this.status = request.getStatus();
+        this.agenda_id = agenda;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        AgendaPoint that = (AgendaPoint) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Time getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Time duration) {
-        this.duration = duration;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setAgenda_points_id(Agenda agenda_points_id) {
-        this.agenda_points_id = agenda_points_id;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

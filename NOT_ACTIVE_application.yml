@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    azure:
+      active-directory:
+        enabled: true
+        credential:
+          client-id: af523b8a-f8a9-4c74-8cac-f4726abeb8a0
+        app-id-uri: api://af523b8a-f8a9-4c74-8cac-f4726abeb8a0

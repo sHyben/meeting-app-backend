@@ -1,78 +1,51 @@
 package com.erstedigital.meetingappbackend.rest.controller;
 
-import com.erstedigital.meetingappbackend.persistence.data.User;
-import com.erstedigital.meetingappbackend.persistence.repository.PositionRepository;
-import com.erstedigital.meetingappbackend.persistence.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.rest.data.request.UserRequest;
+import com.erstedigital.meetingappbackend.rest.data.response.UserResponse;
+import com.erstedigital.meetingappbackend.rest.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
-@RequestMapping(path="/users")
+@RequestMapping(path="/user")
 public class UserController {
-    private UserRepository userRepository;
-    private PositionRepository positionRepository;
+    private final UserService userService;
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping(value = "/findById")
+    @GetMapping
     public @ResponseBody
-    Optional<User> getUserById(@RequestParam(value = "id") Integer id) {
-        return userRepository.findById(id);
+    List<UserResponse> getAllUsers() {
+        return userService.getAll().stream().map(UserResponse::new).collect(Collectors.toList());
     }
 
-    @PostMapping(path="/add")
-    public @ResponseBody String addNewUser(@RequestParam String name,
-                                           @RequestParam String email,
-                                           @RequestParam Optional<Integer> positionId) {
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        positionId.ifPresent(integer -> user.setUser_position(positionRepository.getById(integer)));
-        try {
-            userRepository.save(user);
-        } catch(DataAccessException e) {
-            return "Exception: " + e.getMessage();
-        }
-        return "Saved";
+    @GetMapping(value = "/{id}")
+    public @ResponseBody
+    UserResponse getUserById(@PathVariable("id") Integer id) throws NotFoundException {
+        return new UserResponse(userService.findById(id));
     }
 
-    @PutMapping(path="/update")
-    public @ResponseBody String updateUser(@RequestParam Integer id,
-                                           @RequestParam Optional<String> name,
-                                           @RequestParam Optional<String> email,
-                                           @RequestParam Optional<Integer> positionId) {
-        User user = userRepository.getById(id);
-        name.ifPresent(user::setName);
-        email.ifPresent(user::setEmail);
-        positionId.ifPresent(integer -> user.setUser_position(positionRepository.getById(integer)));
-
-        userRepository.save(user);
-        return "Updated";
+    @PostMapping
+    public @ResponseBody ResponseEntity<UserResponse> addNewUser(@RequestBody UserRequest body) throws NotFoundException {
+        return new ResponseEntity<>(new UserResponse(userService.create(body)), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path="/delete")
-    public @ResponseBody String deleteUser(@RequestParam Integer id) {
-        if(getUserById(id).isPresent()) {
-            userRepository.delete(getUserById(id).get());
-        }
-
-        return "Deleted";
+    @PutMapping(path="/{id}")
+    public @ResponseBody UserResponse updateUser(@PathVariable("id") Integer id,
+                                                 @RequestBody UserRequest body) throws NotFoundException {
+        return new UserResponse(userService.update(id, body));
     }
 
-    @Autowired
-    private void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
-    private void setPositionRepository(PositionRepository positionRepository) {
-        this.positionRepository = positionRepository;
+    @DeleteMapping(path="/{id}")
+    public @ResponseBody void deleteUser(@PathVariable("id") Integer id) throws NotFoundException {
+        userService.delete(id);
     }
 }

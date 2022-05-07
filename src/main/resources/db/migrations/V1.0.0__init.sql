@@ -9,7 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+02:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -115,6 +115,7 @@ INSERT INTO `attendees` (`id`, `email`, `meeting_id`, `feedback_rating`, `feedba
 
 CREATE TABLE IF NOT EXISTS `meetings` (
   `id` int(10) UNSIGNED NOT NULL,
+  `exchange_id` varchar(512) NOT NULL,
   `organizer_id` int(10) UNSIGNED NOT NULL,
   `meeting_type` enum('project_status','brainstorming','team_status','social','one_to_one') COLLATE utf8_slovak_ci NOT NULL,
   `start_date` date NOT NULL,
@@ -131,8 +132,8 @@ CREATE TABLE IF NOT EXISTS `meetings` (
 -- Dumping data for table `meetings`
 --
 
-INSERT INTO `meetings` (`id`, `organizer_id`, `meeting_type`, `start_date`, `start_time`, `duration`, `actual_duration`, `meeting_cost`, `url`, `notes_url`, `activity_id`) VALUES
-(2, 25, 'project_status', '2022-04-14', '13:00:00', '01:00:00', NULL, 0, NULL, '\"\"', 1);
+INSERT INTO `meetings` (`id`, `exchange_id`, `organizer_id`, `meeting_type`, `start_date`, `start_time`, `duration`, `actual_duration`, `meeting_cost`, `url`, `notes_url`, `activity_id`) VALUES
+(2, 'notSet', 25, 'project_status', '2022-04-14', '13:00:00', '01:00:00', NULL, 0, NULL, '\"\"', 1);
 
 -- --------------------------------------------------------
 

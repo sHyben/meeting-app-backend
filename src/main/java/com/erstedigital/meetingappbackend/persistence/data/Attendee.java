@@ -1,16 +1,25 @@
 package com.erstedigital.meetingappbackend.persistence.data;
 
-import javax.persistence.*;
+import com.erstedigital.meetingappbackend.rest.data.request.AttendeeRequest;
+import lombok.*;
+import org.hibernate.Hibernate;
 
+import javax.persistence.*;
+import java.util.Objects;
+
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "attendees")
 public class Attendee {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
     private String email;
-    private int feedback_rating;
+    private Integer feedback_rating;
     private String feedback_comment;
     private String participation;
 
@@ -22,55 +31,25 @@ public class Attendee {
     @JoinColumn(name = "position_id")
     private Position attendee_position;
 
-    public Integer getId() {
-        return id;
+    public Attendee(AttendeeRequest request, Meeting meeting, Position position) {
+        this.email = request.getEmail();
+        this.feedback_rating = request.getFeedbackRating();
+        this.feedback_comment = request.getFeedbackComment();
+        this.participation = request.getParticipation();
+        this.attendee_meeting = meeting;
+        this.attendee_position = position;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Attendee attendee = (Attendee) o;
+        return id != null && Objects.equals(id, attendee.id);
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getFeedback_rating() {
-        return feedback_rating;
-    }
-
-    public void setFeedback_rating(int feedback_rating) {
-        this.feedback_rating = feedback_rating;
-    }
-
-    public String getFeedback_comment() {
-        return feedback_comment;
-    }
-
-    public void setFeedback_comment(String feedback_comment) {
-        this.feedback_comment = feedback_comment;
-    }
-
-    public String getParticipation() {
-        return participation;
-    }
-
-    public void setParticipation(String participation) {
-        this.participation = participation;
-    }
-
-    public void setAttendee_meeting(Meeting attendee_meeting) {
-        this.attendee_meeting = attendee_meeting;
-    }
-
-    public Position getAttendee_position() {
-        return attendee_position;
-    }
-
-    public void setAttendee_position(Position attendee_position) {
-        this.attendee_position = attendee_position;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
