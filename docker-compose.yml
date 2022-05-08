@@ -41,6 +41,6 @@ services:
       - db
     environment:
       #SPRING_JPA_HIBERNATE_DLL-AUTO: create-drop
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/meetingapp-db?useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/meetingapp-db?allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: spring
