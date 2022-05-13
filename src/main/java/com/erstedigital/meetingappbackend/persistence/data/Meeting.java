@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +22,13 @@ public class Meeting {
     @Column(name = "id", nullable = false)
     private Integer id;
     private String exchange_id;
+    private String subject;
+    private String description;
     private String meeting_type;
-    private Date start_date;
-    private Time start_time;
-    private Time duration;
-    private Time actual_duration;
+    private Date start;
+    private Date actual_start;
+    private Date end;
+    private Date actual_end;
     private Integer meeting_cost;
     private String notes_url;
 
@@ -47,21 +48,29 @@ public class Meeting {
     @JoinColumn(name = "activity_id")
     private Activity activity_id;
 
+    private String location;
+    private Double latitude;
+    private Double longitude;
     private String url;
 
     public Meeting(MeetingRequest request, User user, Activity activity) {
         this.exchange_id = request.getExchangeId();
+        this.subject = request.getSubject();
+        this.description = request.getDescription();
         this.meeting_type = request.getMeetingType();
-        this.start_date = request.getStartDate();
-        this.start_time = request.getStartTime();
-        this.duration = request.getDuration();
-        this.actual_duration = request.getActualDuration();
+        this.start = request.getStart();
+        this.actual_start = request.getActualStart();
+        this.end = request.getEnd();
+        this.actual_end = request.getActualEnd();
         this.meeting_cost = request.getMeetingCost();
         this.notes_url = request.getNotesUrl();
         this.organizer = user;
         this.agendas = new ArrayList<>();
         this.attendees = new ArrayList<>();
         this.activity_id = activity;
+        this.location = request.getLocation();
+        this.latitude = request.getLatitude();
+        this.longitude = request.getLongitude();
         this.url = request.getUrl();
     }
 

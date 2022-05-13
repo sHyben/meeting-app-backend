@@ -52,20 +52,26 @@ public class MeetingServiceImpl implements MeetingService {
         if(request.getExchangeId() != null) {
             meeting.setExchange_id(request.getExchangeId());
         }
+        if(request.getSubject() != null) {
+            meeting.setSubject(request.getSubject());
+        }
+        if(request.getDescription() != null) {
+            meeting.setDescription(request.getDescription());
+        }
         if(request.getMeetingType() != null) {
             meeting.setMeeting_type(request.getMeetingType());
         }
-        if(request.getStartDate() != null) {
-            meeting.setStart_date(request.getStartDate());
+        if(request.getStart() != null) {
+            meeting.setStart(request.getStart());
         }
-        if(request.getStartTime() != null) {
-            meeting.setStart_time(request.getStartTime());
+        if(request.getActualStart() != null) {
+            meeting.setActual_start(request.getActualStart());
         }
-        if(request.getDuration() != null) {
-            meeting.setDuration(request.getDuration());
+        if(request.getEnd() != null) {
+            meeting.setEnd(request.getEnd());
         }
-        if(request.getActualDuration() != null) {
-            meeting.setActual_duration(request.getActualDuration());
+        if(request.getActualEnd() != null) {
+            meeting.setActual_end(request.getActualEnd());
         }
         if(request.getMeetingCost() != null) {
             meeting.setMeeting_cost(request.getMeetingCost());
@@ -78,6 +84,15 @@ public class MeetingServiceImpl implements MeetingService {
         }
         if(request.getActivityId() != null) {
             meeting.setActivity_id(activityService.findById(request.getActivityId()));
+        }
+        if(request.getLocation() != null) {
+            meeting.setLocation(request.getLocation());
+        }
+        if(request.getLatitude() != null) {
+            meeting.setLatitude(request.getLatitude());
+        }
+        if(request.getLongitude() != null) {
+            meeting.setLongitude(request.getLongitude());
         }
         if(request.getUrl() != null) {
             meeting.setUrl(request.getUrl());
