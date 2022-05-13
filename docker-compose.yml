@@ -29,6 +29,8 @@ services:
   #service 3: definition of spring-boot app
   customerservice:
     image: meeting-app-backend
+    volumes:
+      - "./src:/src"
     container_name: meeting-app-backend
     build:
       context: .

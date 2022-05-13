@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Time;
 import java.util.Date;
 
 @Getter
@@ -12,14 +11,19 @@ import java.util.Date;
 @NoArgsConstructor
 public class MeetingRequest {
     private String exchangeId;
+    private String subject;
+    private String description;
     private String meetingType;
-    private Date startDate;
-    private Time startTime;
-    private Time duration;
-    private Time actualDuration;
+    private Date start;
+    private Date actualStart;
+    private Date end;
+    private Date actualEnd;
     private Integer meetingCost;
     private String notesUrl;
     private Integer organizerId;
     private Integer activityId;
+    private String location;
+    private Double latitude;
+    private Double longitude;
     private String url;
 }

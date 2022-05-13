@@ -6,7 +6,6 @@ import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,33 +15,43 @@ import java.util.List;
 public class MeetingResponse {
     private Integer id;
     private String exchangeId;
+    private String subject;
+    private String description;
     private String meetingType;
-    private Date startDate;
-    private Time startTime;
-    private Time duration;
-    private Time actualDuration;
+    private Date start;
+    private Date actualStart;
+    private Date end;
+    private Date actualEnd;
     private Integer meetingCost;
     private String notesUrl;
     private Integer organizerId;
     private List<Integer> agendas;
     private List<Integer> attendees;
     private Integer activityId;
+    private String location;
+    private Double latitude;
+    private Double longitude;
     private String url;
 
     public MeetingResponse(Meeting meeting) {
         this.id = meeting.getId();
         this.exchangeId = meeting.getExchange_id();
+        this.subject = meeting.getSubject();
+        this.description = meeting.getDescription();
         this.meetingType = meeting.getMeeting_type();
-        this.startDate = meeting.getStart_date();
-        this.startTime = meeting.getStart_time();
-        this.duration = meeting.getDuration();
-        this.actualDuration = meeting.getActual_duration();
+        this.start = meeting.getStart();
+        this.actualStart = meeting.getActual_start();
+        this.end = meeting.getEnd();
+        this.actualEnd = meeting.getActual_end();
         this.meetingCost = meeting.getMeeting_cost();
         this.notesUrl = meeting.getNotes_url();
         this.organizerId = meeting.getOrganizer().getId();
         this.agendas = convertAgendaListToIdList(meeting);
         this.attendees = convertAttendeeListToIdList(meeting);
         this.activityId = meeting.getActivity_id().getId();
+        this.location = meeting.getLocation();
+        this.latitude = meeting.getLatitude();
+        this.longitude = meeting.getLongitude();
         this.url = meeting.getUrl();
     }
 
