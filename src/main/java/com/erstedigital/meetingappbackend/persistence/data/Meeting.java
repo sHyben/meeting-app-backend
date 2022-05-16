@@ -22,7 +22,8 @@ public class Meeting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private String exchange_id;
+    @Column(name = "exchange_id", nullable = false)
+    private String exchangeId;
     private String meeting_type;
     private Date start_date;
     private Time start_time;
@@ -50,7 +51,7 @@ public class Meeting {
     private String url;
 
     public Meeting(MeetingRequest request, User user, Activity activity) {
-        this.exchange_id = request.getExchangeId();
+        this.exchangeId = request.getExchangeId();
         this.meeting_type = request.getMeetingType();
         this.start_date = request.getStartDate();
         this.start_time = request.getStartTime();

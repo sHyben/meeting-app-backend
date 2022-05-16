@@ -123,8 +123,8 @@ CREATE TABLE IF NOT EXISTS `meetings` (
   `duration` time NOT NULL,
   `actual_duration` time DEFAULT NULL,
   `meeting_cost` int(11) DEFAULT NULL,
-  `url` varchar(64) COLLATE utf8_slovak_ci DEFAULT NULL,
-  `notes_url` varchar(64) COLLATE utf8_slovak_ci NOT NULL DEFAULT '""',
+  `url` varchar(256) COLLATE utf8_slovak_ci DEFAULT NULL,
+  `notes_url` varchar(256) COLLATE utf8_slovak_ci NOT NULL DEFAULT '""',
   `activity_id` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
