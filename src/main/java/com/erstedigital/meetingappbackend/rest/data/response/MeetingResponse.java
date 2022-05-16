@@ -31,7 +31,7 @@ public class MeetingResponse {
 
     public MeetingResponse(Meeting meeting) {
         this.id = meeting.getId();
-        this.exchangeId = meeting.getExchange_id();
+        this.exchangeId = meeting.getExchangeId();
         this.meetingType = meeting.getMeeting_type();
         this.startDate = meeting.getStart_date();
         this.startTime = meeting.getStart_time();

@@ -41,6 +41,16 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
+    public Meeting findByExchangeId(String id) throws NotFoundException {
+        Optional<Meeting> meeting = meetingRepository.findByExchangeId(id);
+        if(meeting.isPresent()) {
+            return meeting.get();
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
+    @Override
     public Meeting create(MeetingRequest request) throws NotFoundException {
         return meetingRepository.save(new Meeting(request, userService.findById(request.getOrganizerId()),
                 activityService.findById(request.getActivityId())));
@@ -50,7 +60,7 @@ public class MeetingServiceImpl implements MeetingService {
     public Meeting update(Integer id, MeetingRequest request) throws NotFoundException {
         Meeting meeting = findById(id);
         if(request.getExchangeId() != null) {
-            meeting.setExchange_id(request.getExchangeId());
+            meeting.setExchangeId(request.getExchangeId());
         }
         if(request.getMeetingType() != null) {
             meeting.setMeeting_type(request.getMeetingType());

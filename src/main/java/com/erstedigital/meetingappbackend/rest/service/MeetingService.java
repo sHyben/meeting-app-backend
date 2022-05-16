@@ -11,6 +11,8 @@ public interface MeetingService {
 
     Meeting findById(Integer id) throws NotFoundException;
 
+    Meeting findByExchangeId(String id) throws NotFoundException;
+
     Meeting create(MeetingRequest request) throws NotFoundException;
 
     Meeting update(Integer id, MeetingRequest request) throws NotFoundException;

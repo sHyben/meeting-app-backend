@@ -33,6 +33,12 @@ public class MeetingController {
         return new MeetingResponse(meetingService.findById(id));
     }
 
+    @GetMapping(value = "/exchange/{id}")
+    public @ResponseBody
+    MeetingResponse getMeetingByExchangeId(@PathVariable("id") String id) throws NotFoundException {
+        return new MeetingResponse(meetingService.findByExchangeId(id));
+    }
+
     @PostMapping
     public @ResponseBody
     ResponseEntity<MeetingResponse> addNewMeeting(@RequestBody MeetingRequest body) throws NotFoundException {
