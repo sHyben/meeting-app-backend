@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
-    //Optional<Meeting> findByExchangeId(String exchange_id);
+    Optional<Meeting> findByExchangeId(String exchange_id);
 }
