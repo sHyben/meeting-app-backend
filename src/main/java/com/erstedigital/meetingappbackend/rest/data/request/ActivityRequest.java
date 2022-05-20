@@ -12,5 +12,5 @@ public class ActivityRequest {
     private String title;
     private String text;
     private String answer;
-    private String img_url;
+    private String imgUrl;
 }

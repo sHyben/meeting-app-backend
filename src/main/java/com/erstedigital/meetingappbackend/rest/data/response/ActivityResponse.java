@@ -5,8 +5,8 @@ import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class ActivityResponse {
     private String title;
     private String text;
     private String answer;
-    private String img_url;
+    private String imgUrl;
     private List<Integer> meetings;
 
     public ActivityResponse(Activity activity) {
@@ -25,15 +25,7 @@ public class ActivityResponse {
         this.title = activity.getTitle();
         this.text = activity.getText();
         this.answer = activity.getAnswer();
-        this.img_url = activity.getImg_url();
-        this.meetings = convertEntityListToIdList(activity);
-    }
-
-    private List<Integer> convertEntityListToIdList(Activity activity) {
-        List<Integer> idList = new ArrayList<>();
-        for (Meeting meeting : activity.getMeetings()) {
-            idList.add(meeting.getId());
-        }
-        return idList;
+        this.imgUrl = activity.getImgUrl();
+        this.meetings = activity.getMeetings().stream().map(Meeting::getId).collect(Collectors.toList());;
     }
 }

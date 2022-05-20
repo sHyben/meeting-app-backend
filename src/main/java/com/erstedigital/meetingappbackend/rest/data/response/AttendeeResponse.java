@@ -18,10 +18,10 @@ public class AttendeeResponse {
     public AttendeeResponse(Attendee attendee) {
         this.id = attendee.getId();
         this.email = attendee.getEmail();
-        this.feedbackRating = attendee.getFeedback_rating();
-        this.feedbackComment = attendee.getFeedback_comment();
+        this.feedbackRating = attendee.getFeedbackRating();
+        this.feedbackComment = attendee.getFeedbackComment();
         this.participation = attendee.getParticipation();
-        this.meetingId = attendee.getAttendee_meeting().getId();
-        this.positionId = attendee.getAttendee_position().getId();
+        this.meetingId = attendee.getAttendeeMeeting().getId();
+        this.positionId = attendee.getAttendeePosition().getId();
     }
 }

@@ -51,19 +51,19 @@ public class AttendeeServiceImpl implements AttendeeService {
             attendee.setEmail(request.getEmail());
         }
         if(request.getFeedbackRating() != null) {
-            attendee.setFeedback_rating(request.getFeedbackRating());
+            attendee.setFeedbackRating(request.getFeedbackRating());
         }
         if(request.getFeedbackComment() != null) {
-            attendee.setFeedback_comment(request.getFeedbackComment());
+            attendee.setFeedbackComment(request.getFeedbackComment());
         }
         if(request.getParticipation() != null) {
             attendee.setParticipation(request.getParticipation());
         }
         if(request.getMeetingId() != null) {
-            attendee.setAttendee_meeting(meetingService.findById(request.getMeetingId()));
+            attendee.setAttendeeMeeting(meetingService.findById(request.getMeetingId()));
         }
         if(request.getPositionId() != null) {
-            attendee.setAttendee_position(positionService.findById(request.getPositionId()));
+            attendee.setAttendeePosition(positionService.findById(request.getPositionId()));
         }
         return attendeeRepository.save(attendee);
     }

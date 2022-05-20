@@ -45,7 +45,7 @@ public class AgendaServiceImpl implements AgendaService {
     public Agenda update(Integer id, AgendaRequest request) throws NotFoundException {
         Agenda agenda = findById(id);
         if(request.getMeetingId() != null) {
-            agenda.setAgenda_meeting(meetingService.findById(request.getMeetingId()));
+            agenda.setAgendaMeeting(meetingService.findById(request.getMeetingId()));
         }
         return agendaRepository.save(agenda);
     }

@@ -6,7 +6,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,32 +21,38 @@ public class Meeting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private String exchange_id;
+    @Column(name = "exchange_id")
+    private String exchangeId;
     private String subject;
     private String description;
-    private String meeting_type;
+    @Column(name = "meeting_type")
+    private String meetingType;
     private Date start;
-    private Date actual_start;
+    @Column(name = "actual_start")
+    private Date actualStart;
     private Date end;
-    private Date actual_end;
-    private Integer meeting_cost;
-    private String notes_url;
+    @Column(name = "actual_end")
+    private Date actualEnd;
+    @Column(name = "meeting_cost")
+    private Integer meetingCost;
+    @Column(name = "notes_url")
+    private String notesUrl;
 
     @ManyToOne
     @JoinColumn(name = "organizer_id")
     private User organizer;
 
-    @OneToMany(mappedBy="agenda_meeting")
+    @OneToMany(mappedBy="agendaMeeting")
     @ToString.Exclude
     private List<Agenda> agendas;
 
-    @OneToMany(mappedBy="attendee_meeting")
+    @OneToMany(mappedBy="attendeeMeeting")
     @ToString.Exclude
     private List<Attendee> attendees;
 
     @ManyToOne
     @JoinColumn(name = "activity_id")
-    private Activity activity_id;
+    private Activity activityId;
 
     private String location;
     private Double latitude;
@@ -54,20 +60,20 @@ public class Meeting {
     private String url;
 
     public Meeting(MeetingRequest request, User user, Activity activity) {
-        this.exchange_id = request.getExchangeId();
+        this.exchangeId = request.getExchangeId();
         this.subject = request.getSubject();
         this.description = request.getDescription();
-        this.meeting_type = request.getMeetingType();
+        this.meetingType = request.getMeetingType();
         this.start = request.getStart();
-        this.actual_start = request.getActualStart();
+        this.actualStart = request.getActualStart();
         this.end = request.getEnd();
-        this.actual_end = request.getActualEnd();
-        this.meeting_cost = request.getMeetingCost();
-        this.notes_url = request.getNotesUrl();
+        this.actualEnd = request.getActualEnd();
+        this.meetingCost = request.getMeetingCost();
+        this.notesUrl = request.getNotesUrl();
         this.organizer = user;
         this.agendas = new ArrayList<>();
         this.attendees = new ArrayList<>();
-        this.activity_id = activity;
+        this.activityId = activity;
         this.location = request.getLocation();
         this.latitude = request.getLatitude();
         this.longitude = request.getLongitude();

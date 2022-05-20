@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(request.getEmail());
         }
         if(request.getPositionId() != null) {
-            user.setUser_position(positionService.findById(request.getPositionId()));
+            user.setUserPosition(positionService.findById(request.getPositionId()));
         }
         return userRepository.save(user);
     }

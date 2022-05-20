@@ -6,8 +6,8 @@ import com.erstedigital.meetingappbackend.persistence.data.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -21,24 +21,8 @@ public class PositionResponse {
     public PositionResponse(Position position) {
         this.id = position.getId();
         this.name = position.getName();
-        this.hourlyCost = position.getHourly_cost();
-        this.attendees = convertAttendeeListToIdList(position);
-        this.users = convertUserListToIdList(position);
-    }
-
-    private List<Integer> convertUserListToIdList(Position position) {
-        List<Integer> idList = new ArrayList<>();
-        for (User user : position.getPosition_users()) {
-            idList.add(user.getId());
-        }
-        return idList;
-    }
-
-    private List<Integer> convertAttendeeListToIdList(Position position) {
-        List<Integer> idList = new ArrayList<>();
-        for (Attendee attendee : position.getPosition_attendees()) {
-            idList.add(attendee.getId());
-        }
-        return idList;
+        this.hourlyCost = position.getHourlyCost();
+        this.attendees = position.getPositionAttendees().stream().map(Attendee::getId).collect(Collectors.toList());
+        this.users = position.getPositionUsers().stream().map(User::getId).collect(Collectors.toList());;
     }
 }

@@ -22,17 +22,18 @@ public class User {
     private Integer id;
     private String name;
     private String email;
-    private Date modified_at;
+    @Column(name = "modified_at")
+    private Date modifiedAt;
 
     @ManyToOne
     @JoinColumn(name = "position_id")
-    private Position user_position;
+    private Position userPosition;
 
     public User(UserRequest request, Position position) {
         this.name = request.getName();
         this.email = request.getEmail();
-        this.modified_at = new Date(Calendar.getInstance().getTime().getTime());
-        this.user_position = position;
+        this.modifiedAt = new Date(Calendar.getInstance().getTime().getTime());
+        this.userPosition = position;
     }
 
     @Override

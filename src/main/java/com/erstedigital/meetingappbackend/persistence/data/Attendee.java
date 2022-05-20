@@ -19,25 +19,27 @@ public class Attendee {
     @Column(name = "id", nullable = false)
     private Integer id;
     private String email;
-    private Integer feedback_rating;
-    private String feedback_comment;
+    @Column(name = "feedback_rating")
+    private Integer feedbackRating;
+    @Column(name = "feedback_comment")
+    private String feedbackComment;
     private String participation;
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
-    private Meeting attendee_meeting;
+    private Meeting attendeeMeeting;
 
     @ManyToOne
     @JoinColumn(name = "position_id")
-    private Position attendee_position;
+    private Position attendeePosition;
 
     public Attendee(AttendeeRequest request, Meeting meeting, Position position) {
         this.email = request.getEmail();
-        this.feedback_rating = request.getFeedbackRating();
-        this.feedback_comment = request.getFeedbackComment();
+        this.feedbackRating = request.getFeedbackRating();
+        this.feedbackComment = request.getFeedbackComment();
         this.participation = request.getParticipation();
-        this.attendee_meeting = meeting;
-        this.attendee_position = position;
+        this.attendeeMeeting = meeting;
+        this.attendeePosition = position;
     }
 
     @Override
