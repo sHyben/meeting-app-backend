@@ -15,5 +15,5 @@ public class AgendaPointRequest {
     private String description;
     private Time duration;
     private String status;
-    private Integer agenda_id;
+    private Integer agendaId;
 }

@@ -45,7 +45,7 @@ public class PositionServiceImpl implements PositionService {
             position.setName(request.getName());
         }
         if(request.getHourlyCost() != null) {
-            position.setHourly_cost(request.getHourlyCost());
+            position.setHourlyCost(request.getHourlyCost());
         }
         return positionRepository.save(position);
     }

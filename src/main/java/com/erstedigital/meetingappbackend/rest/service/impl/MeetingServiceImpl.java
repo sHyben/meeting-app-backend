@@ -50,7 +50,7 @@ public class MeetingServiceImpl implements MeetingService {
     public Meeting update(Integer id, MeetingRequest request) throws NotFoundException {
         Meeting meeting = findById(id);
         if(request.getExchangeId() != null) {
-            meeting.setExchange_id(request.getExchangeId());
+            meeting.setExchangeId(request.getExchangeId());
         }
         if(request.getSubject() != null) {
             meeting.setSubject(request.getSubject());
@@ -59,31 +59,31 @@ public class MeetingServiceImpl implements MeetingService {
             meeting.setDescription(request.getDescription());
         }
         if(request.getMeetingType() != null) {
-            meeting.setMeeting_type(request.getMeetingType());
+            meeting.setMeetingType(request.getMeetingType());
         }
         if(request.getStart() != null) {
             meeting.setStart(request.getStart());
         }
         if(request.getActualStart() != null) {
-            meeting.setActual_start(request.getActualStart());
+            meeting.setActualStart(request.getActualStart());
         }
         if(request.getEnd() != null) {
             meeting.setEnd(request.getEnd());
         }
         if(request.getActualEnd() != null) {
-            meeting.setActual_end(request.getActualEnd());
+            meeting.setActualEnd(request.getActualEnd());
         }
         if(request.getMeetingCost() != null) {
-            meeting.setMeeting_cost(request.getMeetingCost());
+            meeting.setMeetingCost(request.getMeetingCost());
         }
         if(request.getNotesUrl() != null) {
-            meeting.setNotes_url(request.getNotesUrl());
+            meeting.setNotesUrl(request.getNotesUrl());
         }
         if(request.getOrganizerId() != null) {
             meeting.setOrganizer(userService.findById(request.getOrganizerId()));
         }
         if(request.getActivityId() != null) {
-            meeting.setActivity_id(activityService.findById(request.getActivityId()));
+            meeting.setActivityId(activityService.findById(request.getActivityId()));
         }
         if(request.getLocation() != null) {
             meeting.setLocation(request.getLocation());

@@ -6,9 +6,9 @@ import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -35,39 +35,23 @@ public class MeetingResponse {
 
     public MeetingResponse(Meeting meeting) {
         this.id = meeting.getId();
-        this.exchangeId = meeting.getExchange_id();
+        this.exchangeId = meeting.getExchangeId();
         this.subject = meeting.getSubject();
         this.description = meeting.getDescription();
-        this.meetingType = meeting.getMeeting_type();
+        this.meetingType = meeting.getMeetingType();
         this.start = meeting.getStart();
-        this.actualStart = meeting.getActual_start();
+        this.actualStart = meeting.getActualStart();
         this.end = meeting.getEnd();
-        this.actualEnd = meeting.getActual_end();
-        this.meetingCost = meeting.getMeeting_cost();
-        this.notesUrl = meeting.getNotes_url();
+        this.actualEnd = meeting.getActualEnd();
+        this.meetingCost = meeting.getMeetingCost();
+        this.notesUrl = meeting.getNotesUrl();
         this.organizerId = meeting.getOrganizer().getId();
-        this.agendas = convertAgendaListToIdList(meeting);
-        this.attendees = convertAttendeeListToIdList(meeting);
-        this.activityId = meeting.getActivity_id().getId();
+        this.agendas = meeting.getAgendas().stream().map(Agenda::getId).collect(Collectors.toList());
+        this.attendees = meeting.getAttendees().stream().map(Attendee::getId).collect(Collectors.toList());
+        this.activityId = meeting.getActivityId().getId();
         this.location = meeting.getLocation();
         this.latitude = meeting.getLatitude();
         this.longitude = meeting.getLongitude();
         this.url = meeting.getUrl();
-    }
-
-    private List<Integer> convertAgendaListToIdList(Meeting meeting) {
-        List<Integer> idList = new ArrayList<>();
-        for (Agenda agenda : meeting.getAgendas()) {
-            idList.add(agenda.getId());
-        }
-        return idList;
-    }
-
-    private List<Integer> convertAttendeeListToIdList(Meeting meeting) {
-        List<Integer> idList = new ArrayList<>();
-        for (Attendee attendee : meeting.getAttendees()) {
-            idList.add(attendee.getId());
-        }
-        return idList;
     }
 }

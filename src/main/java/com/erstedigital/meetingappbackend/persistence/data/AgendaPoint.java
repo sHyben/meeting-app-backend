@@ -27,7 +27,7 @@ public class AgendaPoint {
 
     @ManyToOne
     @JoinColumn(name = "agenda_id")
-    private Agenda agenda_id;
+    private Agenda agendaId;
 
     public AgendaPoint(AgendaPointRequest request, Agenda agenda) {
         this.number = request.getNumber();
@@ -35,7 +35,7 @@ public class AgendaPoint {
         this.description = request.getDescription();
         this.duration = request.getDuration();
         this.status = request.getStatus();
-        this.agenda_id = agenda;
+        this.agendaId = agenda;
     }
 
     @Override

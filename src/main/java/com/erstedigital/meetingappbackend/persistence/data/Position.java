@@ -21,21 +21,22 @@ public class Position {
     @Column(name = "id", nullable = false)
     private Integer id;
     private String name;
-    private Integer hourly_cost;
+    @Column(name = "hourly_cost")
+    private Integer hourlyCost;
 
-    @OneToMany(mappedBy="attendee_position")
+    @OneToMany(mappedBy="attendeePosition")
     @ToString.Exclude
-    private List<Attendee> position_attendees;
+    private List<Attendee> positionAttendees;
 
-    @OneToMany(mappedBy="user_position")
+    @OneToMany(mappedBy="userPosition")
     @ToString.Exclude
-    private List<User> position_users;
+    private List<User> positionUsers;
 
     public Position(PositionRequest request) {
         this.name = request.getName();
-        this.hourly_cost = request.getHourlyCost();
-        this.position_attendees = new ArrayList<>();
-        this.position_users = new ArrayList<>();
+        this.hourlyCost = request.getHourlyCost();
+        this.positionAttendees = new ArrayList<>();
+        this.positionUsers = new ArrayList<>();
     }
 
     @Override

@@ -53,8 +53,8 @@ public class ActivityServiceImpl implements ActivityService {
         if (request.getAnswer() != null) {
             activity.setAnswer(request.getAnswer());
         }
-        if (request.getImg_url() != null) {
-            activity.setImg_url(request.getImg_url());
+        if (request.getImgUrl() != null) {
+            activity.setImgUrl(request.getImgUrl());
         }
         return activityRepository.save(activity);
     }

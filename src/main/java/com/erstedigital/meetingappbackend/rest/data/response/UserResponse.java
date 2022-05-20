@@ -19,7 +19,7 @@ public class UserResponse {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
-        this.modifiedAt = user.getModified_at();
-        this.positionId = user.getUser_position().getId();
+        this.modifiedAt = user.getModifiedAt();
+        this.positionId = user.getUserPosition().getId();
     }
 }

@@ -24,6 +24,6 @@ public class AgendaPointResponse {
         this.description = agendaPoint.getDescription();
         this.duration = agendaPoint.getDuration();
         this.status = agendaPoint.getStatus();
-        this.agendaId = agendaPoint.getAgenda_id().getId();
+        this.agendaId = agendaPoint.getAgendaId().getId();
     }
 }

@@ -20,17 +20,17 @@ public class Agenda {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToMany(mappedBy="agenda_id")
+    @OneToMany(mappedBy = "agendaId")
     @ToString.Exclude
-    private List<AgendaPoint> agenda_points;
+    private List<AgendaPoint> agendaPoints;
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
-    private Meeting agenda_meeting;
+    private Meeting agendaMeeting;
 
     public Agenda(Meeting meeting) {
-        agenda_points = new ArrayList<>();
-        this.agenda_meeting = meeting;
+        agendaPoints = new ArrayList<>();
+        this.agendaMeeting = meeting;
     }
 
     @Override

@@ -5,8 +5,8 @@ import com.erstedigital.meetingappbackend.persistence.data.AgendaPoint;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,15 +17,7 @@ public class AgendaResponse {
 
     public AgendaResponse(Agenda agenda) {
         this.id = agenda.getId();
-        this.meetingPoints = convertEntityListToIdList(agenda);
-        this.meetingId = agenda.getAgenda_meeting().getId();
-    }
-
-    private List<Integer> convertEntityListToIdList(Agenda agenda) {
-        List<Integer> idList = new ArrayList<>();
-        for (AgendaPoint agendaPoint : agenda.getAgenda_points()) {
-            idList.add(agendaPoint.getId());
-        }
-        return idList;
+        this.meetingPoints = agenda.getAgendaPoints().stream().map(AgendaPoint::getId).collect(Collectors.toList());
+        this.meetingId = agenda.getAgendaMeeting().getId();
     }
 }

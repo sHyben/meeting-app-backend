@@ -38,7 +38,7 @@ public class AgendaPointServiceImpl implements AgendaPointService {
 
     @Override
     public AgendaPoint create(AgendaPointRequest request) throws NotFoundException {
-        return agendaPointRepository.save(new AgendaPoint(request, agendaService.findById(request.getAgenda_id())));
+        return agendaPointRepository.save(new AgendaPoint(request, agendaService.findById(request.getAgendaId())));
     }
 
     @Override
@@ -59,8 +59,8 @@ public class AgendaPointServiceImpl implements AgendaPointService {
         if(request.getStatus() != null) {
             agendaPoint.setStatus(request.getStatus());
         }
-        if(request.getAgenda_id() != null) {
-            agendaPoint.setAgenda_id(agendaService.findById(request.getAgenda_id()));
+        if(request.getAgendaId() != null) {
+            agendaPoint.setAgendaId(agendaService.findById(request.getAgendaId()));
         }
         return agendaPointRepository.save(agendaPoint);
     }

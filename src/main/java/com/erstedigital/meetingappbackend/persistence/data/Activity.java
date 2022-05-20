@@ -25,7 +25,8 @@ public class Activity {
     private String title;
     private String text;
     private String answer;
-    private String img_url;
+    @Column(name="img_url")
+    private String imgUrl;
 
     @OneToMany(mappedBy="activity_id")
     @ToString.Exclude
@@ -36,7 +37,7 @@ public class Activity {
         this.title = request.getTitle();
         this.text = request.getText();
         this.answer = request.getAnswer();
-        this.img_url = request.getImg_url();
+        this.imgUrl = request.getImgUrl();
         this.meetings = new ArrayList<>();
     }
 
