@@ -11,6 +11,8 @@ services:
     ports:
       - "3306:3306"
     restart: always
+    volumes:
+      - "./data/db/mysql:/var/lib/mysql"
 
   #service 2: definition of phpMyAdmin
   phpmyadmin:

@@ -28,7 +28,7 @@ public class Activity {
     @Column(name="img_url")
     private String imgUrl;
 
-    @OneToMany(mappedBy="activity_id")
+    @OneToMany(mappedBy="activityId")
     @ToString.Exclude
     private List<Meeting> meetings;
 
