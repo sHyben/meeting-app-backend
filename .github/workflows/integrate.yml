@@ -34,7 +34,7 @@ jobs:
           command: |
             docker pull erstedigitalinnovations/meeting-app-backend
           host: ${{ secrets.SSH_HOST }}
-          user: erste
+          user: root
           key: ${{ secrets.SSH_PKEY }}
       -
         name: Run docker image
@@ -44,5 +44,5 @@ jobs:
             cd /meeting-app/meeting-app-backend
             docker-compose up -d
           host: ${{ secrets.SSH_HOST }}
-          user: erste
+          user: root
           key: ${{ secrets.SSH_PKEY }}
