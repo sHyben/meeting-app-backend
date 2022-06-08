@@ -30,7 +30,7 @@ services:
 
   #service 3: definition of spring-boot app
   customerservice:
-    image: meeting-app-backend
+    image: erstedigitalinnovations/meeting-app-backend
     volumes:
       - "./src:/src"
     container_name: meeting-app-backend
@@ -48,3 +48,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/meetingapp-db?allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
       SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+
+  frontend:
+    image: erstedigitalinnovations/meeting-app-react
+    ports:
+      - "80:80"
