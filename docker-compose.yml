@@ -6,7 +6,7 @@ services:
     image: mysql:latest
     container_name: meetingapp-db
     environment:
-      - MYSQL_ROOT_PASSWORD=spring
+      - MYSQL_ROOT_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
       - MYSQL_DATABASE=meetingapp-db
     ports:
       - "3306:3306"
@@ -25,8 +25,8 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: spring
+      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+      SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
 
   #service 3: definition of spring-boot app
   customerservice:
@@ -46,5 +46,5 @@ services:
     environment:
       #SPRING_JPA_HIBERNATE_DLL-AUTO: create-drop
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/meetingapp-db?allowPublicKeyRetrieval=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: spring
+      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+      SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
