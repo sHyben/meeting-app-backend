@@ -52,8 +52,9 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     public Meeting create(MeetingRequest request) throws NotFoundException {
+
         return meetingRepository.save(new Meeting(request, userService.findById(request.getOrganizerId()),
-                activityService.findById(request.getActivityId())));
+                activityService.findById(request.getActivities())));
     }
 
     @Override
@@ -92,8 +93,8 @@ public class MeetingServiceImpl implements MeetingService {
         if(request.getOrganizerId() != null) {
             meeting.setOrganizer(userService.findById(request.getOrganizerId()));
         }
-        if(request.getActivityId() != null) {
-            meeting.setActivityId(activityService.findById(request.getActivityId()));
+        if(request.getActivities() != null) {
+            meeting.setActivities(activityService.findById(request.getActivities()));
         }
         if(request.getLocation() != null) {
             meeting.setLocation(request.getLocation());

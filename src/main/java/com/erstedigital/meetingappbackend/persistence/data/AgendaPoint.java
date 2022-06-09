@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.sql.Time;
+import java.sql.Date;
 import java.util.Objects;
 
 @Getter
@@ -22,20 +22,32 @@ public class AgendaPoint {
     private Integer number;
     private String title;
     private String description;
-    private Time duration;
     private String status;
+
+    private Date start;
+
+    @Column(name = "actual_start")
+    private Date actualStart;
+
+    private Date end;
+
+    @Column(name = "actual_end")
+    private Date actualEnd;
 
     @ManyToOne
     @JoinColumn(name = "agenda_id")
-    private Agenda agendaId;
+    private Agenda agenda;
 
     public AgendaPoint(AgendaPointRequest request, Agenda agenda) {
         this.number = request.getNumber();
         this.title = request.getTitle();
         this.description = request.getDescription();
-        this.duration = request.getDuration();
+        this.start = request.getStart();
+        this.actualStart = request.getActualStart();
+        this.end = request.getEnd();
+        this.actualEnd = request.getActualEnd();
         this.status = request.getStatus();
-        this.agendaId = agenda;
+        this.agenda = agenda;
     }
 
     @Override

@@ -11,6 +11,8 @@ public interface UserService {
 
     User findById(Integer id) throws NotFoundException;
 
+    User findByEmail(String email) throws NotFoundException;
+
     User create(UserRequest request) throws NotFoundException;
 
     User update(Integer id, UserRequest request) throws NotFoundException;

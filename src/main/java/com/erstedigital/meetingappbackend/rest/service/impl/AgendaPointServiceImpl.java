@@ -6,6 +6,7 @@ import com.erstedigital.meetingappbackend.persistence.repository.AgendaPointRepo
 import com.erstedigital.meetingappbackend.rest.data.request.AgendaPointRequest;
 import com.erstedigital.meetingappbackend.rest.service.AgendaPointService;
 import com.erstedigital.meetingappbackend.rest.service.AgendaService;
+import com.erstedigital.meetingappbackend.websockets.model.AgendaMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,11 @@ public class AgendaPointServiceImpl implements AgendaPointService {
 
     @Override
     public List<AgendaPoint> getAll() {
+        return agendaPointRepository.findAll();
+    }
+
+    @Override
+    public List<AgendaPoint> getAll(Integer agendaId) {
         return agendaPointRepository.findAll();
     }
 
@@ -53,15 +59,41 @@ public class AgendaPointServiceImpl implements AgendaPointService {
         if(request.getDescription() != null) {
             agendaPoint.setDescription(request.getDescription());
         }
-        if(request.getDuration() != null) {
-            agendaPoint.setDuration(request.getDuration());
+        if(request.getStart() != null) {
+            agendaPoint.setStart(request.getStart());
+        }
+        if(request.getEnd() != null) {
+            agendaPoint.setEnd(request.getEnd());
+        }
+        if(request.getActualStart() != null) {
+            agendaPoint.setActualStart(request.getActualStart());
+        }
+        if(request.getActualEnd() != null) {
+            agendaPoint.setActualEnd(request.getActualEnd());
         }
         if(request.getStatus() != null) {
             agendaPoint.setStatus(request.getStatus());
         }
         if(request.getAgendaId() != null) {
-            agendaPoint.setAgendaId(agendaService.findById(request.getAgendaId()));
+            agendaPoint.setAgenda(agendaService.findById(request.getAgendaId()));
         }
+        return agendaPointRepository.save(agendaPoint);
+    }
+
+    @Override
+    public AgendaPoint update(AgendaMessage message) throws NotFoundException {
+        AgendaPoint agendaPoint = findById(message.getAgendaPointId());
+
+        agendaPoint.setStatus(message.getState().toString());
+
+        if (message.getActualStart() != null) {
+            agendaPoint.setActualStart(message.getActualStart());
+        }
+
+        if (message.getActualEnd() != null) {
+            agendaPoint.setActualEnd(message.getActualEnd());
+        }
+
         return agendaPointRepository.save(agendaPoint);
     }
 

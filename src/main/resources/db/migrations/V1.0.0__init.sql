@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `agenda_points` (
     `description` varchar(256) COLLATE utf8_slovak_ci NOT NULL,
     `duration` time NOT NULL,
     `agenda_id` int(10) UNSIGNED NOT NULL,
-    `status` tinyint(4) DEFAULT NULL
+    `status` enum('ONGOING','PENDING','DONE','SKIPPED') DEFAULT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 --

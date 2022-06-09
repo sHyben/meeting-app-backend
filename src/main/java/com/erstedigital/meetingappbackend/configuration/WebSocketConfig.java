@@ -14,16 +14,14 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/note");
         config.enableSimpleBroker("/agenda");
-        config.setApplicationDestinationPrefixes("/ws");
+        config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/note");
-        registry.addEndpoint("/note").withSockJS();
-
-        registry.addEndpoint("/agenda");
-        registry.addEndpoint("/agenda").withSockJS();
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("*")
+                .withSockJS();
     }
 }
 
