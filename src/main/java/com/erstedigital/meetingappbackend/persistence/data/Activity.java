@@ -6,9 +6,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -28,9 +26,8 @@ public class Activity {
     @Column(name="img_url")
     private String imgUrl;
 
-    @OneToMany(mappedBy="activity_id")
-    @ToString.Exclude
-    private List<Meeting> meetings;
+    @ManyToMany(mappedBy = "activities")
+    Set<Meeting> meetings;
 
     public Activity(ActivityRequest request) {
         this.type = request.getType();
@@ -38,7 +35,7 @@ public class Activity {
         this.text = request.getText();
         this.answer = request.getAnswer();
         this.imgUrl = request.getImgUrl();
-        this.meetings = new ArrayList<>();
+        this.meetings = new HashSet<>();
     }
 
     public void addMeeting(Meeting meeting) throws NotFoundException {

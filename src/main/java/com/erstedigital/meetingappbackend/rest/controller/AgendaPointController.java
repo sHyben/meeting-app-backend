@@ -23,8 +23,12 @@ public class AgendaPointController {
 
     @GetMapping
     public @ResponseBody
-    List<AgendaPointResponse> getAllAgendaPoints() {
-        return agendaPointService.getAll().stream().map(AgendaPointResponse::new).collect(Collectors.toList());
+    List<AgendaPointResponse> getAllAgendaPoints(@RequestParam("agendaId") Integer agendaId) {
+        if (agendaId == null) {
+            return agendaPointService.getAll().stream().map(AgendaPointResponse::new).collect(Collectors.toList());
+        } else {
+            return agendaPointService.getAll(agendaId).stream().map(AgendaPointResponse::new).collect(Collectors.toList());
+        }
     }
 
     @GetMapping(value = "/{id}")

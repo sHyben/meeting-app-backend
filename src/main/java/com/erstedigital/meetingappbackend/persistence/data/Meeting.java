@@ -1,5 +1,6 @@
 package com.erstedigital.meetingappbackend.persistence.data;
 
+import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -46,20 +48,27 @@ public class Meeting {
     @ToString.Exclude
     private List<Agenda> agendas;
 
+    @OneToMany(mappedBy="meeting")
+    @ToString.Exclude
+    private List<Note> notes;
+
     @OneToMany(mappedBy="attendeeMeeting")
     @ToString.Exclude
     private List<Attendee> attendees;
 
-    @ManyToOne
-    @JoinColumn(name = "activity_id")
-    private Activity activityId;
+    @ManyToMany
+    @JoinTable(
+            name = "meeting_activity",
+            joinColumns = @JoinColumn(name = "meeting_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_id"))
+    private Set<Activity> activities;
 
     private String location;
     private Double latitude;
     private Double longitude;
     private String url;
 
-    public Meeting(MeetingRequest request, User user, Activity activity) {
+    public Meeting(MeetingRequest request, User user, Set<Activity> activities) {
         this.exchangeId = request.getExchangeId();
         this.subject = request.getSubject();
         this.description = request.getDescription();
@@ -73,11 +82,25 @@ public class Meeting {
         this.organizer = user;
         this.agendas = new ArrayList<>();
         this.attendees = new ArrayList<>();
-        this.activityId = activity;
+        this.activities = activities;
         this.location = request.getLocation();
         this.latitude = request.getLatitude();
         this.longitude = request.getLongitude();
         this.url = request.getUrl();
+    }
+
+    public void addActivity(Activity activity) throws NotFoundException {
+        if(activity != null) {
+            this.activities.add(activity);
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
+    public void removeActivity(Activity activity) {
+        if(activity != null) {
+            this.activities.remove(activity);
+        }
     }
 
     @Override

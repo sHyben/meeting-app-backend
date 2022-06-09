@@ -7,8 +7,10 @@ import com.erstedigital.meetingappbackend.rest.data.request.ActivityRequest;
 import com.erstedigital.meetingappbackend.rest.service.ActivityService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
@@ -21,6 +23,11 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<Activity> getAll() {
         return activityRepository.findAll();
+    }
+
+    @Override
+    public Set<Activity> findById(Set<Integer> ids) {
+        return new HashSet<>(activityRepository.findAllById(ids));
     }
 
     @Override

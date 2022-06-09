@@ -1,5 +1,6 @@
 package com.erstedigital.meetingappbackend.rest.data.response;
 
+import com.erstedigital.meetingappbackend.persistence.data.Activity;
 import com.erstedigital.meetingappbackend.persistence.data.Agenda;
 import com.erstedigital.meetingappbackend.persistence.data.Attendee;
 import com.erstedigital.meetingappbackend.persistence.data.Meeting;
@@ -27,7 +28,8 @@ public class MeetingResponse {
     private Integer organizerId;
     private List<Integer> agendas;
     private List<Integer> attendees;
-    private Integer activityId;
+    private List<Integer> activities;
+
     private String location;
     private Double latitude;
     private Double longitude;
@@ -48,7 +50,7 @@ public class MeetingResponse {
         this.organizerId = meeting.getOrganizer().getId();
         this.agendas = meeting.getAgendas().stream().map(Agenda::getId).collect(Collectors.toList());
         this.attendees = meeting.getAttendees().stream().map(Attendee::getId).collect(Collectors.toList());
-        this.activityId = meeting.getActivityId().getId();
+        this.activities = meeting.getActivities().stream().map(Activity::getId).collect(Collectors.toList());
         this.location = meeting.getLocation();
         this.latitude = meeting.getLatitude();
         this.longitude = meeting.getLongitude();
