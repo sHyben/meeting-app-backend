@@ -23,8 +23,12 @@ public class UserController {
 
     @GetMapping
     public @ResponseBody
-    List<UserResponse> getAllUsers() {
-        return userService.getAll().stream().map(UserResponse::new).collect(Collectors.toList());
+    UserResponse getUserByMail(@RequestParam("email") String email) throws NotFoundException {
+        if (email != null) {
+            return new UserResponse(userService.findByEmail(email));
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @GetMapping(value = "/{id}")
@@ -36,6 +40,11 @@ public class UserController {
     @PostMapping
     public @ResponseBody ResponseEntity<UserResponse> addNewUser(@RequestBody UserRequest body) throws NotFoundException {
         return new ResponseEntity<>(new UserResponse(userService.create(body)), HttpStatus.CREATED);
+    }
+
+    @PostMapping(path="/attendees")
+    public @ResponseBody ResponseEntity<List<UserResponse>> addNewUsers(@RequestBody List<UserRequest> body) throws NotFoundException {
+        return new ResponseEntity<>(userService.create(body).stream().map(UserResponse::new).collect(Collectors.toList()), HttpStatus.CREATED);
     }
 
     @PutMapping(path="/{id}")

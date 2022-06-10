@@ -9,6 +9,7 @@ import com.erstedigital.meetingappbackend.rest.service.AgendaService;
 import com.erstedigital.meetingappbackend.websockets.model.AgendaMessage;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,18 @@ public class AgendaPointServiceImpl implements AgendaPointService {
     @Override
     public AgendaPoint create(AgendaPointRequest request) throws NotFoundException {
         return agendaPointRepository.save(new AgendaPoint(request, agendaService.findById(request.getAgendaId())));
+    }
+
+    @Override
+    public List<AgendaPoint> create(List<AgendaPointRequest> request) throws NotFoundException {
+        ArrayList<AgendaPoint> newAgendaPoints = new ArrayList<>();
+
+        request.forEach(ap -> {
+            try {
+                newAgendaPoints.add(new AgendaPoint(ap, agendaService.findById(ap.getAgendaId())));
+            } catch (NotFoundException e) {}
+        });
+        return agendaPointRepository.saveAll(newAgendaPoints);
     }
 
     @Override

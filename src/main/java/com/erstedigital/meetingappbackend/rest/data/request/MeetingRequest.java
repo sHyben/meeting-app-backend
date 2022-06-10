@@ -23,6 +23,7 @@ public class MeetingRequest {
     private String notesUrl;
     private Integer organizerId;
     private Set<Integer> activities;
+    private Set<Integer> attendees;
     private String location;
     private Double latitude;
     private Double longitude;

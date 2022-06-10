@@ -16,6 +16,8 @@ public interface AgendaPointService {
 
     AgendaPoint create(AgendaPointRequest request) throws NotFoundException;
 
+    List<AgendaPoint> create(List<AgendaPointRequest> request) throws NotFoundException;
+
     AgendaPoint update(Integer id, AgendaPointRequest request) throws NotFoundException;
 
     AgendaPoint update(AgendaMessage message) throws NotFoundException;

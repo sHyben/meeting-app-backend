@@ -43,6 +43,12 @@ public class AgendaPointController {
         return new ResponseEntity<>(new AgendaPointResponse(agendaPointService.create(body)), HttpStatus.CREATED);
     }
 
+    @PostMapping(path="/{id}")
+    public @ResponseBody
+    ResponseEntity<List<AgendaPointResponse>> addNewAgendaPoints(@PathVariable("id") Integer id, @RequestBody List<AgendaPointRequest> body) throws NotFoundException {
+        return new ResponseEntity<>(agendaPointService.create(body).stream().map(AgendaPointResponse::new).collect(Collectors.toList()), HttpStatus.CREATED);
+    }
+
     @PutMapping(path="/{id}")
     public @ResponseBody AgendaPointResponse updateAgendaPoint(@PathVariable("id") Integer id, @RequestBody AgendaPointRequest body) throws NotFoundException {
         return new AgendaPointResponse(agendaPointService.update(id, body));

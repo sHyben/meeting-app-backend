@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -23,14 +23,15 @@ public class AgendaPoint {
     private String title;
     private String description;
     private String status;
-
+    @Temporal(TemporalType.TIMESTAMP)
     private Date start;
 
     @Column(name = "actual_start")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date actualStart;
-
+    @Temporal(TemporalType.TIMESTAMP)
     private Date end;
-
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "actual_end")
     private Date actualEnd;
 
