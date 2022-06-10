@@ -15,6 +15,8 @@ public interface MeetingService {
 
     Meeting create(MeetingRequest request) throws NotFoundException;
 
+    Integer startActivity(Integer activityId, Integer meetingId) throws NotFoundException;
+
     Meeting update(Integer id, MeetingRequest request) throws NotFoundException;
 
     void delete(Integer id) throws NotFoundException;

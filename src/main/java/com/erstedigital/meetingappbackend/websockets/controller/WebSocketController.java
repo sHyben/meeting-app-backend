@@ -6,9 +6,12 @@ import com.erstedigital.meetingappbackend.persistence.data.AgendaPoint;
 import com.erstedigital.meetingappbackend.persistence.data.Note;
 import com.erstedigital.meetingappbackend.rest.data.response.AgendaPointResponse;
 import com.erstedigital.meetingappbackend.rest.service.AgendaPointService;
+import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.NoteService;
+import com.erstedigital.meetingappbackend.websockets.model.ActivityMessage;
 import com.erstedigital.meetingappbackend.websockets.model.AgendaMessage;
 import com.erstedigital.meetingappbackend.websockets.model.NoteMessage;
+import com.erstedigital.meetingappbackend.websockets.response.ActivityOutputMessage;
 import com.erstedigital.meetingappbackend.websockets.response.AgendaOutputMessage;
 import com.erstedigital.meetingappbackend.websockets.response.NoteOutputMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +32,15 @@ public class WebSocketController {
 
     private final NoteService noteService;
     private final AgendaPointService agendaPointService;
+
+    private final MeetingService meetingService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public WebSocketController(NoteService noteService, AgendaPointService agendaPointService, SimpMessagingTemplate messagingTemplate) {
+    public WebSocketController(NoteService noteService, AgendaPointService agendaPointService, MeetingService meetingService, SimpMessagingTemplate messagingTemplate) {
         this.noteService = noteService;
         this.messagingTemplate = messagingTemplate;
         this.agendaPointService = agendaPointService;
+        this.meetingService = meetingService;
     }
 
     @MessageMapping("/note/{meetingId}")
@@ -43,8 +49,19 @@ public class WebSocketController {
         Note newNote = noteService.createNote(message, meetingId);
 
         messagingTemplate.convertAndSend(
-                "/note/messages/" + newNote,
+                "/note/messages/" + meetingId,
                 new NoteOutputMessage(newNote.getId(), newNote.getFrom().getEmail(), newNote.getText(), time)
+        );
+    }
+
+    @MessageMapping("/activity/{meetingId}")
+    public void startActivity(@DestinationVariable Integer meetingId, @Payload ActivityMessage message) throws NotFoundException {
+        String time = new SimpleDateFormat("HH:mm").format(new Date());
+        Integer runningActivityId = meetingService.startActivity(message.getActivityId(), meetingId);
+
+        messagingTemplate.convertAndSend(
+                "/activity/messages/" + meetingId,
+                new ActivityOutputMessage(runningActivityId)
         );
     }
 

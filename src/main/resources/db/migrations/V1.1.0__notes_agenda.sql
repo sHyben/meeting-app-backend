@@ -59,6 +59,9 @@ ALTER TABLE `agenda_points`
     ADD COLUMN `actual_end` datetime DEFAULT NULL;
 
 ALTER TABLE `meetings`
+    ADD COLUMN `running_activity_id` int(10) UNSIGNED DEFAULT NULL,
+    ADD KEY `meeting_runact_ibfk_1` (`running_activity_id`),
+    ADD CONSTRAINT `meeting_runact_ibfk_1` FOREIGN KEY (`running_activity_id`) REFERENCES `activities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     MODIFY `start` datetime,
     MODIFY `end` datetime,
     MODIFY `actual_start` datetime,
