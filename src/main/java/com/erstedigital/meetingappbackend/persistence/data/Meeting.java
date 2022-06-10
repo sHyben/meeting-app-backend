@@ -70,6 +70,10 @@ public class Meeting {
             inverseJoinColumns = @JoinColumn(name = "activity_id"))
     private Set<Activity> activities;
 
+    @OneToOne
+    @JoinColumn(name = "running_activity_id")
+    private Activity runningActivity;
+
     private String location;
     private Double latitude;
     private Double longitude;

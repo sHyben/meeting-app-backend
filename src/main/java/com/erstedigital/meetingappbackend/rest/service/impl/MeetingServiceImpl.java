@@ -1,6 +1,7 @@
 package com.erstedigital.meetingappbackend.rest.service.impl;
 
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.persistence.data.Activity;
 import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import com.erstedigital.meetingappbackend.persistence.repository.MeetingRepository;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
@@ -62,6 +63,20 @@ public class MeetingServiceImpl implements MeetingService {
                     new HashSet<>(userService.findById(new ArrayList<>(request.getAttendees())))
                 )
         );
+    }
+
+    @Override
+    public Integer startActivity(Integer activityId, Integer meetingId) throws NotFoundException {
+        Meeting meeting = findById(meetingId);
+
+        if (activityId != null && activityId > 0) {
+            Activity activity = activityService.findById(activityId);
+            meeting.setRunningActivity(activity);
+            return activityId;
+        } else {
+            meeting.setRunningActivity(null);
+            return -1;
+        }
     }
 
     @Override

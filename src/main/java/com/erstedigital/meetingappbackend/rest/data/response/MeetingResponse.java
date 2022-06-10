@@ -31,6 +31,8 @@ public class MeetingResponse {
     private Double longitude;
     private String url;
 
+    private Integer runningActivity;
+
     public MeetingResponse(Meeting meeting) {
         this.id = meeting.getId();
         this.exchangeId = meeting.getExchangeId();
@@ -51,5 +53,6 @@ public class MeetingResponse {
         this.latitude = meeting.getLatitude();
         this.longitude = meeting.getLongitude();
         this.url = meeting.getUrl();
+        this.runningActivity = meeting.getRunningActivity().getId();
     }
 }
