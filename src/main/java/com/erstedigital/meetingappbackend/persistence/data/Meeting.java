@@ -7,7 +7,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -29,11 +29,15 @@ public class Meeting {
     private String description;
     @Column(name = "meeting_type")
     private String meetingType;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date start;
     @Column(name = "actual_start")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date actualStart;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date end;
     @Column(name = "actual_end")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date actualEnd;
     @Column(name = "meeting_cost")
     private Integer meetingCost;
@@ -52,9 +56,12 @@ public class Meeting {
     @ToString.Exclude
     private List<Note> notes;
 
-    @OneToMany(mappedBy="attendeeMeeting")
-    @ToString.Exclude
-    private List<Attendee> attendees;
+    @ManyToMany
+    @JoinTable(
+            name = "meeting_user",
+            joinColumns = @JoinColumn(name = "meeting_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> attendees;
 
     @ManyToMany
     @JoinTable(
@@ -68,7 +75,7 @@ public class Meeting {
     private Double longitude;
     private String url;
 
-    public Meeting(MeetingRequest request, User user, Set<Activity> activities) {
+    public Meeting(MeetingRequest request, User user, Set<Activity> activities, Set<User> attendees) {
         this.exchangeId = request.getExchangeId();
         this.subject = request.getSubject();
         this.description = request.getDescription();
@@ -81,7 +88,7 @@ public class Meeting {
         this.notesUrl = request.getNotesUrl();
         this.organizer = user;
         this.agendas = new ArrayList<>();
-        this.attendees = new ArrayList<>();
+        this.attendees = new ArrayList<>(attendees);
         this.activities = activities;
         this.location = request.getLocation();
         this.latitude = request.getLatitude();

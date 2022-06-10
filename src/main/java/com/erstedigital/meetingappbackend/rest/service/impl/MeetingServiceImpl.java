@@ -9,6 +9,8 @@ import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,8 +55,13 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public Meeting create(MeetingRequest request) throws NotFoundException {
 
-        return meetingRepository.save(new Meeting(request, userService.findById(request.getOrganizerId()),
-                activityService.findById(request.getActivities())));
+        return meetingRepository.save(new Meeting(
+                    request,
+                    userService.findById(request.getOrganizerId()),
+                    activityService.findById(request.getActivities()),
+                    new HashSet<>(userService.findById(new ArrayList<>(request.getAttendees())))
+                )
+        );
     }
 
     @Override

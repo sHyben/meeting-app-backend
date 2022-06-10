@@ -3,7 +3,7 @@ package com.erstedigital.meetingappbackend.rest.data.response;
 import com.erstedigital.meetingappbackend.persistence.data.AgendaPoint;
 import lombok.Getter;
 import lombok.Setter;
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 @Setter

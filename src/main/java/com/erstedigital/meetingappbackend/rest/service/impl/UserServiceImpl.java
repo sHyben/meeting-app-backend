@@ -8,6 +8,7 @@ import com.erstedigital.meetingappbackend.rest.service.PositionService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findById(List<Integer> id) throws NotFoundException {
+        ArrayList<User> users = new ArrayList<>();
+
+        id.forEach(user -> {
+            Optional<User> foundUser = userRepository.findById(user);
+            if(foundUser.isPresent()) {
+                users.add(foundUser.get());
+            }
+        });
+
+        return users;
+    }
+
+    @Override
     public User findByEmail(String email) throws NotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
         if(user.isPresent()) {
@@ -49,6 +64,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(UserRequest request) throws NotFoundException {
         return userRepository.save(new User(request, positionService.findById(request.getPositionId())));
+    }
+
+    @Override
+    public List<User> create(List<UserRequest> request) throws NotFoundException {
+        ArrayList<User> newUserList = new ArrayList<>();
+
+        // find user by mail and create new user if he does not exist
+        request.forEach(userRequest -> {
+            try {
+                User user = findByEmail(userRequest.getEmail());
+                newUserList.add(user);
+            } catch (NotFoundException e) {
+                try {
+                    User user = userRepository.save(new User(userRequest, positionService.findById(userRequest.getPositionId())));
+                    newUserList.add(user);
+                } catch (NotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        return newUserList;
     }
 
     @Override
