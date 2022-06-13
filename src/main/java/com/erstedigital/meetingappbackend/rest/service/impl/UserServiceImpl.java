@@ -43,9 +43,7 @@ public class UserServiceImpl implements UserService {
 
         id.forEach(user -> {
             Optional<User> foundUser = userRepository.findById(user);
-            if(foundUser.isPresent()) {
-                users.add(foundUser.get());
-            }
+            foundUser.ifPresent(users::add);
         });
 
         return users;
