@@ -53,6 +53,10 @@ public class MeetingResponse {
         this.latitude = meeting.getLatitude();
         this.longitude = meeting.getLongitude();
         this.url = meeting.getUrl();
-        this.runningActivity = meeting.getRunningActivity().getId();
+        if (meeting.getRunningActivity() != null) {
+            this.runningActivity = meeting.getRunningActivity().getId();
+        } else {
+            this.runningActivity = -1;
+        }
     }
 }

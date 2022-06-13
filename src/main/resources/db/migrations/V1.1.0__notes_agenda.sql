@@ -13,15 +13,17 @@ CREATE TABLE IF NOT EXISTS `notes` (
 
 
 CREATE TABLE IF NOT EXISTS `meeting_activity` (
-    `id` int(10) UNSIGNED NOT NULL,
+    `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `meeting_id` int(10) UNSIGNED NOT NULL,
-    `activity_id` int(10) UNSIGNED NOT NULL
+    `activity_id` int(10) UNSIGNED NOT NULL,
+    primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 CREATE TABLE IF NOT EXISTS `meeting_user` (
-    `id` int(10) UNSIGNED NOT NULL,
+    `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `meeting_id` int(10) UNSIGNED NOT NULL,
-    `user_id` int(10) UNSIGNED NOT NULL
+    `user_id` int(10) UNSIGNED NOT NULL,
+    primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 ALTER TABLE `notes`
@@ -30,12 +32,10 @@ ALTER TABLE `notes`
     ADD KEY `notes_ibfk_2` (`user_id`);
 
 ALTER TABLE `meeting_activity`
-    ADD PRIMARY KEY (`id`),
     ADD KEY `meeting_activity_ibfk_1` (`meeting_id`),
     ADD KEY `meeting_activity_ibfk_2` (`activity_id`);
 
 ALTER TABLE `meeting_user`
-    ADD PRIMARY KEY (`id`),
     ADD KEY `meeting_user_ibfk_1` (`meeting_id`),
     ADD KEY `meeting_user_ibfk_2` (`user_id`);
 
