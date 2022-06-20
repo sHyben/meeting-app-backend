@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findByMeeting(Integer id) {
+        return userRepository.findAllByMeetings_Id(id);
+    }
+
+    @Override
     public User create(UserRequest request) throws NotFoundException {
         return userRepository.save(new User(request, positionService.findById(request.getPositionId())));
     }

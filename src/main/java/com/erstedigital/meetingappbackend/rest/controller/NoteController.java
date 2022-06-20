@@ -21,7 +21,7 @@ public class NoteController {
         this.noteService = noteService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public @ResponseBody
     List<NoteResponse> getNotesByMeetingId(@RequestParam("meetingId") Integer id) throws NotFoundException {
         return noteService.findByMeetingId(id).stream().map(NoteResponse::new).collect(Collectors.toList());

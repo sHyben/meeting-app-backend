@@ -47,6 +47,11 @@ public class UserController {
         return new ResponseEntity<>(userService.create(body).stream().map(UserResponse::new).collect(Collectors.toList()), HttpStatus.CREATED);
     }
 
+    @GetMapping(path="/attendees/{id}")
+    public @ResponseBody ResponseEntity<List<UserResponse>> getAttendees(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(userService.findByMeeting(id).stream().map(UserResponse::new).collect(Collectors.toList()), HttpStatus.CREATED);
+    }
+
     @PutMapping(path="/{id}")
     public @ResponseBody UserResponse updateUser(@PathVariable("id") Integer id,
                                                  @RequestBody UserRequest body) throws NotFoundException {

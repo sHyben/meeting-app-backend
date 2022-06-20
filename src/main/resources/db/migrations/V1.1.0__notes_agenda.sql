@@ -5,10 +5,11 @@ SET time_zone = "+02:00";
 
 
 CREATE TABLE IF NOT EXISTS `notes` (
-    `id` int(10) UNSIGNED NOT NULL,
+    `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `meeting_id` int(10) UNSIGNED NOT NULL,
     `user_id` int(10) UNSIGNED NOT NULL,
-    `text` TEXT CHARACTER SET utf8 COLLATE utf8_slovak_ci NOT NULL
+    `text` TEXT CHARACTER SET utf8 COLLATE utf8_slovak_ci NOT NULL,
+    primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 
@@ -27,7 +28,6 @@ CREATE TABLE IF NOT EXISTS `meeting_user` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 ALTER TABLE `notes`
-    ADD PRIMARY KEY (`id`),
     ADD KEY `notes_ibfk_1` (`meeting_id`),
     ADD KEY `notes_ibfk_2` (`user_id`);
 
@@ -38,6 +38,9 @@ ALTER TABLE `meeting_activity`
 ALTER TABLE `meeting_user`
     ADD KEY `meeting_user_ibfk_1` (`meeting_id`),
     ADD KEY `meeting_user_ibfk_2` (`user_id`);
+
+ALTER TABLE `agenda_points`
+    MODIFY COLUMN `description` TEXT;
 
 ALTER TABLE `notes`
     ADD CONSTRAINT `notes_ibfk_1` FOREIGN KEY (`meeting_id`) REFERENCES `meetings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

@@ -14,7 +14,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "agenda_points")
-public class AgendaPoint {
+public class AgendaPoint implements Comparable<AgendaPoint> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -35,7 +35,7 @@ public class AgendaPoint {
     @Column(name = "actual_end")
     private Date actualEnd;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "agenda_id")
     private Agenda agenda;
 
@@ -57,6 +57,11 @@ public class AgendaPoint {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         AgendaPoint that = (AgendaPoint) o;
         return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int compareTo(AgendaPoint o) {
+        return getStart().compareTo(o.getStart());
     }
 
     @Override

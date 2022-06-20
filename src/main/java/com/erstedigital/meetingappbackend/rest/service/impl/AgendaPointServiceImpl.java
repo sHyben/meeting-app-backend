@@ -1,6 +1,7 @@
 package com.erstedigital.meetingappbackend.rest.service.impl;
 
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.persistence.AgendaPointState;
 import com.erstedigital.meetingappbackend.persistence.data.AgendaPoint;
 import com.erstedigital.meetingappbackend.persistence.repository.AgendaPointRepository;
 import com.erstedigital.meetingappbackend.rest.data.request.AgendaPointRequest;
@@ -9,9 +10,9 @@ import com.erstedigital.meetingappbackend.rest.service.AgendaService;
 import com.erstedigital.meetingappbackend.websockets.model.AgendaMessage;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 public class AgendaPointServiceImpl implements AgendaPointService {
@@ -93,6 +94,26 @@ public class AgendaPointServiceImpl implements AgendaPointService {
         return agendaPointRepository.save(agendaPoint);
     }
 
+    /**
+     * Updates times of agenda points based on the end time of previous agenda point
+     *
+     * @param start start time, according to which times will be adjusted
+     * @param agendaPoints which should be adjusted based on start time
+     * @return adjusted agenda points
+     */
+    private List<AgendaPoint> updateTimes(Date start, List<AgendaPoint> agendaPoints) {
+        AtomicReference<Date> startTime = new AtomicReference<>(start);
+        agendaPoints = agendaPoints.stream().filter(ap -> !ap.getStatus().equals(AgendaPointState.SKIPPED.toString())).peek(ap -> {
+            long diffInMillies = Math.abs(ap.getStart().getTime() - ap.getEnd().getTime());
+            Date end = new Date(startTime.get().getTime());
+            end.setTime(end.getTime() + diffInMillies);
+            ap.setStart(startTime.get());
+            ap.setEnd(end);
+            startTime.set(new Date(end.getTime()));
+        }).collect(Collectors.toList());
+        return agendaPoints;
+    }
+
     @Override
     public AgendaPoint update(AgendaMessage message) throws NotFoundException {
         AgendaPoint agendaPoint = findById(message.getAgendaPointId());
@@ -105,6 +126,30 @@ public class AgendaPointServiceImpl implements AgendaPointService {
 
         if (message.getActualEnd() != null) {
             agendaPoint.setActualEnd(message.getActualEnd());
+        }
+
+        if (message.getState() == AgendaPointState.SKIPPED) {
+            List<AgendaPoint> agendaPoints = agendaPoint.getAgenda().getAgendaPoints().stream().filter(ap -> ap.getEnd().after(agendaPoint.getEnd())).sorted().collect(Collectors.toList());
+            agendaPoints = updateTimes(agendaPoint.getEnd(), agendaPoints);
+            agendaPointRepository.saveAll(agendaPoints);
+        } else if (message.getState() == AgendaPointState.DONE) {
+            List<AgendaPoint> agendaPoints = agendaPoint.getAgenda().getAgendaPoints().stream().filter(ap -> ap.getEnd().after(agendaPoint.getEnd())).sorted().collect(Collectors.toList());
+            agendaPoints = updateTimes(agendaPoint.getActualEnd(), agendaPoints);
+            if (!agendaPoints.isEmpty()) {
+                agendaPoints.get(0).setStatus(AgendaPointState.ONGOING.toString());
+                agendaPoints.get(0).setActualStart(new Date());
+                agendaPointRepository.save(agendaPoint);
+                agendaPoints = agendaPointRepository.saveAll(agendaPoints);
+                return agendaPoints.get(0);
+            }
+        } else if (message.getState() == AgendaPointState.ONGOING) {
+            List<AgendaPoint> agendaPoints = agendaPoint.getAgenda().getAgendaPoints().stream().sorted().collect(Collectors.toList());
+            agendaPoints = updateTimes(agendaPoint.getActualStart(), agendaPoints);
+            if (!agendaPoints.isEmpty()) {
+                agendaPointRepository.save(agendaPoint);
+                agendaPoints = agendaPointRepository.saveAll(agendaPoints);
+                return agendaPoints.get(0);
+            }
         }
 
         return agendaPointRepository.save(agendaPoint);
