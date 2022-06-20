@@ -6,7 +6,9 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -29,11 +31,16 @@ public class User {
     @JoinColumn(name = "position_id")
     private Position userPosition;
 
+    @OneToMany(mappedBy = "attendanceUser")
+    @ToString.Exclude
+    private List<Attendance> attendances;
+
     public User(UserRequest request, Position position) {
         this.name = request.getName();
         this.email = request.getEmail();
         this.modifiedAt = new Date(Calendar.getInstance().getTime().getTime());
         this.userPosition = position;
+        this.attendances = new ArrayList<>();
     }
 
     @Override

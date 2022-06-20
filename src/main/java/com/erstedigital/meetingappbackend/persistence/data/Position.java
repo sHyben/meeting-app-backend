@@ -24,10 +24,6 @@ public class Position {
     @Column(name = "hourly_cost")
     private Integer hourlyCost;
 
-    @OneToMany(mappedBy="attendeePosition")
-    @ToString.Exclude
-    private List<Attendee> positionAttendees;
-
     @OneToMany(mappedBy="userPosition")
     @ToString.Exclude
     private List<User> positionUsers;
@@ -35,7 +31,6 @@ public class Position {
     public Position(PositionRequest request) {
         this.name = request.getName();
         this.hourlyCost = request.getHourlyCost();
-        this.positionAttendees = new ArrayList<>();
         this.positionUsers = new ArrayList<>();
     }
 

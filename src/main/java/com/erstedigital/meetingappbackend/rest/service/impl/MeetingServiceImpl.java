@@ -4,6 +4,7 @@ import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import com.erstedigital.meetingappbackend.persistence.repository.MeetingRepository;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
+import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.service.ActivityService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
@@ -113,5 +114,11 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public void delete(Integer id) throws NotFoundException {
         meetingRepository.delete(findById(id));
+    }
+
+    @Override
+    public List<Meeting> getMeetingsBetweenDatesFromUser(StatAttendanceRequest request) throws NotFoundException {
+        return meetingRepository.findByStartBetweenAndOrganizerLike(request.getStart(), request.getEnd(),
+                userService.findById(request.getUserId()));
     }
 }
