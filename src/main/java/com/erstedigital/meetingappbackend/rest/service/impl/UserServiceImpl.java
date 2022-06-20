@@ -8,6 +8,8 @@ import com.erstedigital.meetingappbackend.rest.service.PositionService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +55,8 @@ public class UserServiceImpl implements UserService {
         if(request.getPositionId() != null) {
             user.setUserPosition(positionService.findById(request.getPositionId()));
         }
+
+        user.setModifiedAt(new Date(Calendar.getInstance().getTime().getTime()));
         return userRepository.save(user);
     }
 

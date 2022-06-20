@@ -1,6 +1,6 @@
 package com.erstedigital.meetingappbackend.persistence.data;
 
-import com.erstedigital.meetingappbackend.rest.data.request.AttendeeRequest;
+import com.erstedigital.meetingappbackend.rest.data.request.AttendanceRequest;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -12,13 +12,12 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name = "attendees")
-public class Attendee {
+@Table(name = "attendances")
+public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private String email;
     @Column(name = "feedback_rating")
     private Integer feedbackRating;
     @Column(name = "feedback_comment")
@@ -27,27 +26,26 @@ public class Attendee {
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
-    private Meeting attendeeMeeting;
+    private Meeting attendanceMeeting;
 
     @ManyToOne
-    @JoinColumn(name = "position_id")
-    private Position attendeePosition;
+    @JoinColumn(name = "user_id")
+    private User attendanceUser;
 
-    public Attendee(AttendeeRequest request, Meeting meeting, Position position) {
-        this.email = request.getEmail();
+    public Attendance(AttendanceRequest request, Meeting meeting, User user) {
         this.feedbackRating = request.getFeedbackRating();
         this.feedbackComment = request.getFeedbackComment();
         this.participation = request.getParticipation();
-        this.attendeeMeeting = meeting;
-        this.attendeePosition = position;
+        this.attendanceMeeting = meeting;
+        this.attendanceUser = user;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Attendee attendee = (Attendee) o;
-        return id != null && Objects.equals(id, attendee.id);
+        Attendance attendance = (Attendance) o;
+        return id != null && Objects.equals(id, attendance.id);
     }
 
     @Override

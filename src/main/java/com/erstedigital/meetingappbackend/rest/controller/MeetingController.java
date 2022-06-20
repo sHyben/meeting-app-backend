@@ -2,12 +2,15 @@ package com.erstedigital.meetingappbackend.rest.controller;
 
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
+import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.data.response.MeetingResponse;
+import com.erstedigital.meetingappbackend.rest.data.response.StatAttendanceResponse;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,5 +57,11 @@ public class MeetingController {
     @DeleteMapping(path="/{id}")
     public @ResponseBody void deleteMeeting(@PathVariable("id") Integer id) throws NotFoundException {
         meetingService.delete(id);
+    }
+
+    @GetMapping(value = "/statistics/meetings")
+    public @ResponseBody
+    StatAttendanceResponse getMeetingsBetweenDatesFromUser(@RequestBody StatAttendanceRequest body) throws NotFoundException {
+        return new StatAttendanceResponse(meetingService.getMeetingsBetweenDatesFromUser(body));
     }
 }

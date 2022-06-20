@@ -46,9 +46,9 @@ public class Meeting {
     @ToString.Exclude
     private List<Agenda> agendas;
 
-    @OneToMany(mappedBy="attendeeMeeting")
+    @OneToMany(mappedBy = "attendanceMeeting")
     @ToString.Exclude
-    private List<Attendee> attendees;
+    private List<Attendance> attendances;
 
     @ManyToOne
     @JoinColumn(name = "activity_id")
@@ -72,7 +72,7 @@ public class Meeting {
         this.notesUrl = request.getNotesUrl();
         this.organizer = user;
         this.agendas = new ArrayList<>();
-        this.attendees = new ArrayList<>();
+        this.attendances = new ArrayList<>();
         this.activityId = activity;
         this.location = request.getLocation();
         this.latitude = request.getLatitude();
