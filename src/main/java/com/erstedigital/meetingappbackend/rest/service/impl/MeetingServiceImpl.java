@@ -8,6 +8,7 @@ import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import com.erstedigital.meetingappbackend.rest.service.ActivityService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
+import com.erstedigital.meetingappbackend.websockets.model.MeetingMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -72,9 +73,11 @@ public class MeetingServiceImpl implements MeetingService {
         if (activityId != null && activityId > 0) {
             Activity activity = activityService.findById(activityId);
             meeting.setRunningActivity(activity);
+            meetingRepository.save(meeting);
             return activityId;
         } else {
             meeting.setRunningActivity(null);
+            meetingRepository.save(meeting);
             return -1;
         }
     }
@@ -132,6 +135,18 @@ public class MeetingServiceImpl implements MeetingService {
         }
         return meetingRepository.save(meeting);
      }
+
+     @Override
+    public Meeting update(Integer id, MeetingMessage request) throws NotFoundException {
+         Meeting meeting = findById(id);
+         if(request.getActualStart() != null) {
+             meeting.setActualStart(request.getActualStart());
+         }
+         if(request.getActualEnd() != null) {
+             meeting.setActualEnd(request.getActualEnd());
+         }
+         return meetingRepository.save(meeting);
+    }
 
     @Override
     public void delete(Integer id) throws NotFoundException {
