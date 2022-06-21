@@ -32,6 +32,9 @@ public class Attendance {
     @JoinColumn(name = "user_id")
     private User attendanceUser;
 
+    @Column(name = "presence_time")
+    private Integer presenceTime;
+
     public Attendance(AttendanceRequest request, Meeting meeting, User user) {
         this.feedbackRating = request.getFeedbackRating();
         this.feedbackComment = request.getFeedbackComment();

@@ -62,6 +62,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         if(request.getUserId() != null) {
             attendance.setAttendanceUser(userService.findById(request.getUserId()));
         }
+        if(request.getPresenceTime() != null) {
+            attendance.setPresenceTime(request.getPresenceTime());
+        }
 
         return attendanceRepository.save(attendance);
     }
