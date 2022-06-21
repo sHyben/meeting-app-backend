@@ -13,4 +13,5 @@ public class AttendanceRequest {
     private boolean participation;
     private Integer meetingId;
     private Integer userId;
+    private Integer presenceTime;
 }
