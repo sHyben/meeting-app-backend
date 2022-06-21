@@ -53,8 +53,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         if(request.getFeedbackComment() != null) {
             attendance.setFeedbackComment(request.getFeedbackComment());
         }
-        if(request.getParticipation() != null) {
-            attendance.setParticipation(request.getParticipation());
+        if(request.isParticipation()) {
+            attendance.setParticipation(request.isParticipation());
         }
         if(request.getMeetingId() != null) {
             attendance.setAttendanceMeeting(meetingService.findById(request.getMeetingId()));

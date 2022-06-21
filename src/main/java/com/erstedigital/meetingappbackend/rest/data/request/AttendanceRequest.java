@@ -10,7 +10,7 @@ import lombok.Setter;
 public class AttendanceRequest {
     private Integer feedbackRating;
     private String feedbackComment;
-    private String participation;
+    private boolean participation;
     private Integer meetingId;
     private Integer userId;
 }
