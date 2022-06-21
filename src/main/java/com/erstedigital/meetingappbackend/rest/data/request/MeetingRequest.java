@@ -26,4 +26,5 @@ public class MeetingRequest {
     private Double latitude;
     private Double longitude;
     private String url;
+    private String apolloCode;
 }

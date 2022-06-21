@@ -32,6 +32,7 @@ public class MeetingResponse {
     private Double latitude;
     private Double longitude;
     private String url;
+    private String apolloCode;
 
     public MeetingResponse(Meeting meeting) {
         this.id = meeting.getId();
@@ -53,5 +54,6 @@ public class MeetingResponse {
         this.latitude = meeting.getLatitude();
         this.longitude = meeting.getLongitude();
         this.url = meeting.getUrl();
+        this.apolloCode = meeting.getApolloCode();
     }
 }

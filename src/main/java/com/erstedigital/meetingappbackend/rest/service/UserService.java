@@ -13,7 +13,11 @@ public interface UserService {
 
     User create(UserRequest request) throws NotFoundException;
 
+    List<User> create(List<UserRequest> request) throws NotFoundException;
+
     User update(Integer id, UserRequest request) throws NotFoundException;
 
     void delete(Integer id) throws NotFoundException;
+
+    List<User> getMeetingAttendees(Integer id);
 }
