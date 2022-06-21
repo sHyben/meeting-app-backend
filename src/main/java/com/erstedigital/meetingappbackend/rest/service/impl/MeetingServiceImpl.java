@@ -10,6 +10,7 @@ import com.erstedigital.meetingappbackend.rest.service.ActivityService;
 import com.erstedigital.meetingappbackend.rest.service.AttendanceService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class MeetingServiceImpl implements MeetingService {
     private final AttendanceService attendanceService;
 
     public MeetingServiceImpl(MeetingRepository meetingRepository, ActivityService activityService,
-                              UserService userService, AttendanceService attendanceService) {
+                              UserService userService, @Lazy AttendanceService attendanceService) {
         this.meetingRepository = meetingRepository;
         this.activityService = activityService;
         this.userService = userService;
