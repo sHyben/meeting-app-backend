@@ -58,6 +58,7 @@ public class Meeting {
     private Double latitude;
     private Double longitude;
     private String url;
+    private String apolloCode;
 
     public Meeting(MeetingRequest request, User user, Activity activity) {
         this.exchangeId = request.getExchangeId();
@@ -78,6 +79,7 @@ public class Meeting {
         this.latitude = request.getLatitude();
         this.longitude = request.getLongitude();
         this.url = request.getUrl();
+        this.apolloCode = request.getApolloCode();
     }
 
     @Override

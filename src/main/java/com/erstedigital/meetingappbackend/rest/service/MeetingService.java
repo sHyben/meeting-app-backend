@@ -21,4 +21,5 @@ public interface MeetingService {
     void delete(Integer id) throws NotFoundException;
 
     List<Meeting> getMeetingsBetweenDatesFromUser(StatAttendanceRequest request) throws NotFoundException;
+
 }

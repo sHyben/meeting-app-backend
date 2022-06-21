@@ -9,6 +9,7 @@ import com.erstedigital.meetingappbackend.rest.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +45,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> create(List<UserRequest> request) throws NotFoundException {
+        List<User> newUsers = new ArrayList<>();
+        for (UserRequest userRequest : request) {
+            newUsers.add(this.create(userRequest));
+        }
+
+        return newUsers;
+    }
+
+    @Override
     public User update(Integer id, UserRequest request) throws NotFoundException {
         User user = findById(id);
         if(request.getName() != null) {
@@ -63,5 +74,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Integer id) throws NotFoundException {
         userRepository.delete(findById(id));
+    }
+
+    @Override
+    public List<User> getMeetingAttendees(Integer id) {
+        return userRepository.findMeetingAttendees(id);
     }
 }

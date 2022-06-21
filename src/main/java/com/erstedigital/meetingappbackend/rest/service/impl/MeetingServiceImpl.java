@@ -2,6 +2,7 @@ package com.erstedigital.meetingappbackend.rest.service.impl;
 
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.persistence.data.Meeting;
+import com.erstedigital.meetingappbackend.persistence.data.User;
 import com.erstedigital.meetingappbackend.persistence.repository.MeetingRepository;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
@@ -108,6 +109,10 @@ public class MeetingServiceImpl implements MeetingService {
         if(request.getUrl() != null) {
             meeting.setUrl(request.getUrl());
         }
+        if(request.getApolloCode() != null) {
+            meeting.setApolloCode(request.getApolloCode());
+        }
+
         return meetingRepository.save(meeting);
      }
 
@@ -121,4 +126,5 @@ public class MeetingServiceImpl implements MeetingService {
         return meetingRepository.findByStartBetweenAndOrganizerLike(request.getStart(), request.getEnd(),
                 userService.findById(request.getUserId()));
     }
+
 }

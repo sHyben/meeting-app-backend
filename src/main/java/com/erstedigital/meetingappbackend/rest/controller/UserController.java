@@ -38,14 +38,25 @@ public class UserController {
         return new ResponseEntity<>(new UserResponse(userService.create(body)), HttpStatus.CREATED);
     }
 
-    @PutMapping(path="/{id}")
+    @PutMapping(path = "/{id}")
     public @ResponseBody UserResponse updateUser(@PathVariable("id") Integer id,
                                                  @RequestBody UserRequest body) throws NotFoundException {
         return new UserResponse(userService.update(id, body));
     }
 
-    @DeleteMapping(path="/{id}")
+    @DeleteMapping(path = "/{id}")
     public @ResponseBody void deleteUser(@PathVariable("id") Integer id) throws NotFoundException {
         userService.delete(id);
+    }
+
+    @PostMapping(path = "/attendees")
+    public @ResponseBody ResponseEntity<List<UserResponse>> addNewUsers(@RequestBody List<UserRequest> body) throws NotFoundException {
+        return new ResponseEntity<>(userService.create(body).stream().map(UserResponse::new).collect(Collectors.toList()),  HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = "/attendees/{id}}")
+    public @ResponseBody
+    ResponseEntity<List<UserResponse>> getMeetingAttendees(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(userService.getMeetingAttendees(id).stream().map(UserResponse::new).collect(Collectors.toList()), HttpStatus.OK);
     }
 }
