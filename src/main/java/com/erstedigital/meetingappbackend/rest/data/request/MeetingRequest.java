@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,4 +28,5 @@ public class MeetingRequest {
     private Double longitude;
     private String url;
     private String apolloCode;
+    private List<Integer> attendees;
 }

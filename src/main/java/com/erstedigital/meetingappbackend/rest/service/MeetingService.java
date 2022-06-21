@@ -20,6 +20,8 @@ public interface MeetingService {
 
     void delete(Integer id) throws NotFoundException;
 
+    void createAttendanceForMeeting(Integer id, List<Integer> attendees) throws NotFoundException;
+
     List<Meeting> getMeetingsBetweenDatesFromUser(StatAttendanceRequest request) throws NotFoundException;
 
 }

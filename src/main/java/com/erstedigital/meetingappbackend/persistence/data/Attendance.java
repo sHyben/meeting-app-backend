@@ -22,7 +22,7 @@ public class Attendance {
     private Integer feedbackRating;
     @Column(name = "feedback_comment")
     private String feedbackComment;
-    private String participation;
+    private boolean participation;
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
@@ -35,7 +35,7 @@ public class Attendance {
     public Attendance(AttendanceRequest request, Meeting meeting, User user) {
         this.feedbackRating = request.getFeedbackRating();
         this.feedbackComment = request.getFeedbackComment();
-        this.participation = request.getParticipation();
+        this.participation = request.isParticipation();
         this.attendanceMeeting = meeting;
         this.attendanceUser = user;
     }
