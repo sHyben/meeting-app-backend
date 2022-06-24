@@ -15,6 +15,8 @@ public class MeetingRequest {
     private String subject;
     private String description;
     private String meetingType;
+    private String feedbackType;
+    private String apolloCode;
     private Date start;
     private Date actualStart;
     private Date end;
