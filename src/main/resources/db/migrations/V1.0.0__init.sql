@@ -40,9 +40,6 @@ CREATE TABLE IF NOT EXISTS `activities` (
 -- Dumping data for table `activities`
 --
 
-INSERT INTO `activities` (`id`, `type`, `title`, `text`, `answer`, `img_url`) VALUES
-    (1, 'Text', 'Vtip', 'Prečo kačica prešla cez cestu? ', 'Pretože si myslela, že je to kura.', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -58,9 +55,6 @@ CREATE TABLE IF NOT EXISTS `agendas` (
 -- Dumping data for table `agendas`
 --
 
-INSERT INTO `agendas` (`id`, `meeting_id`) VALUES
-    (2, 2);
-
 -- --------------------------------------------------------
 
 --
@@ -74,15 +68,12 @@ CREATE TABLE IF NOT EXISTS `agenda_points` (
     `description` varchar(256) COLLATE utf8_slovak_ci NOT NULL,
     `duration` time NOT NULL,
     `agenda_id` int(10) UNSIGNED NOT NULL,
-    `status` enum('ONGOING','PENDING','DONE','SKIPPED') DEFAULT NULL
+    `status` tinyint(4) DEFAULT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 --
 -- Dumping data for table `agenda_points`
 --
-
-INSERT INTO `agenda_points` (`id`, `number`, `title`, `description`, `duration`, `agenda_id`, `status`) VALUES
-    (2, 1, 'Agenda point 1', 'Test agenda text', '00:05:00', 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -103,9 +94,6 @@ CREATE TABLE IF NOT EXISTS `attendees` (
 --
 -- Dumping data for table `attendees`
 --
-
-INSERT INTO `attendees` (`id`, `email`, `meeting_id`, `feedback_rating`, `feedback_comment`, `participation`, `position_id`) VALUES
-    (2, 'intern@gmail.com', 2, 0, '', 'no', 2);
 
 -- --------------------------------------------------------
 
@@ -137,9 +125,6 @@ CREATE TABLE IF NOT EXISTS `meetings` (
 -- Dumping data for table `meetings`
 --
 
-INSERT INTO `meetings` (`id`, `exchange_id`, `organizer_id`,`subject`, `description`, `meeting_type`, `start`, `actual_start`, `end`, `actual_end`, `meeting_cost`, `url`, `notes_url`,`location`, `latitude`, `longitude`, `activity_id`) VALUES
-    (2, 'notSet', 25, 'Test meeting', 'Testing meeting functionality', 'project_status', '2022-04-14:13:00:00', '2022-04-14:13:00:00', '2022-04-14:15:00:00', '2022-04-14:15:30:00', 0, NULL, '','Bratislava', 100.0, 100.0, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -155,10 +140,6 @@ CREATE TABLE IF NOT EXISTS `positions` (
 --
 -- Dumping data for table `positions`
 --
-
-INSERT INTO `positions` (`id`, `name`, `hourly_cost`) VALUES
-                                                          (1, 'CEO', 500),
-                                                          (2, 'Programmer', 50);
 
 -- --------------------------------------------------------
 
@@ -177,10 +158,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 -- Dumping data for table `users`
 --
-
-INSERT INTO `users` (`id`, `name`, `email`, `modified_at`, `position_id`) VALUES
-                                                                              (25, 'Jožko Mrkvička', 'j.mrkvicka@gmail.com', '2022-04-12 09:52:08', 1),
-                                                                              (28, 'Šimon Hyben', 'hyben.simon@gmail.com', '2022-04-25 22:00:00', 1);
 
 --
 -- Indexes for dumped tables

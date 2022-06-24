@@ -13,8 +13,6 @@ public interface UserService {
 
     User findByEmail(String email) throws NotFoundException;
 
-    List<User> findByMeeting(Integer id);
-
     User create(UserRequest request) throws NotFoundException;
 
     List<User> create(List<UserRequest> request) throws NotFoundException;
@@ -24,4 +22,6 @@ public interface UserService {
     User update(Integer id, UserRequest request) throws NotFoundException;
 
     void delete(Integer id) throws NotFoundException;
+
+    List<User> getMeetingAttendees(Integer id);
 }
