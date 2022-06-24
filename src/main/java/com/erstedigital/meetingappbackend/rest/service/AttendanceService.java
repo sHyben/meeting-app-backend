@@ -16,4 +16,6 @@ public interface AttendanceService {
     Attendance update(Integer id, AttendanceRequest request) throws NotFoundException;
 
     void delete(Integer id) throws NotFoundException;
+
+    List<Attendance> getMeetingAttendances(Integer id) throws NotFoundException;
 }

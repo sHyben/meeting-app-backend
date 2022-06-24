@@ -4,16 +4,20 @@ import com.erstedigital.meetingappbackend.persistence.AgendaPointState;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class AgendaOutputMessage {
     private Integer agendaPointId;
     private AgendaPointState state;
-    private String time;
+    private Date actualStart;
+    private Date actualEnd;
 
-    public AgendaOutputMessage(Integer agendaPointId, AgendaPointState state, String time) {
+    public AgendaOutputMessage(Integer agendaPointId, AgendaPointState state, Date actualStart, Date actualEnd) {
         this.agendaPointId = agendaPointId;
         this.state = state;
-        this.time = time;
+        this.actualStart = actualStart;
+        this.actualEnd = actualEnd;
     }
 }

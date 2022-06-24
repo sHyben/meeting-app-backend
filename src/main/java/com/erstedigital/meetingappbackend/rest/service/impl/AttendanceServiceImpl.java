@@ -73,4 +73,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     public void delete(Integer id) throws NotFoundException {
         attendanceRepository.delete(findById(id));
     }
+
+    @Override
+    public List<Attendance> getMeetingAttendances(Integer id) throws NotFoundException {
+        return attendanceRepository.findByAttendanceMeeting(meetingService.findById(id));
+    }
 }

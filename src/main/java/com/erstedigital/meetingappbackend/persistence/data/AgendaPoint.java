@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.sql.Time;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -14,7 +14,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "agenda_points")
-public class AgendaPoint {
+public class AgendaPoint implements Comparable<AgendaPoint> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,20 +22,33 @@ public class AgendaPoint {
     private Integer number;
     private String title;
     private String description;
-    private Time duration;
     private String status;
 
-    @ManyToOne
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date start;
+    @Column(name = "actual_start")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date actualStart;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date end;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "actual_end")
+    private Date actualEnd;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "agenda_id")
-    private Agenda agendaId;
+    private Agenda agenda;
 
     public AgendaPoint(AgendaPointRequest request, Agenda agenda) {
         this.number = request.getNumber();
         this.title = request.getTitle();
         this.description = request.getDescription();
-        this.duration = request.getDuration();
+        this.start = request.getStart();
+        this.actualStart = request.getActualStart();
+        this.end = request.getEnd();
+        this.actualEnd = request.getActualEnd();
         this.status = request.getStatus();
-        this.agendaId = agenda;
+        this.agenda = agenda;
     }
 
     @Override
@@ -44,6 +57,11 @@ public class AgendaPoint {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         AgendaPoint that = (AgendaPoint) o;
         return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int compareTo(AgendaPoint o) {
+        return getStart().compareTo(o.getStart());
     }
 
     @Override

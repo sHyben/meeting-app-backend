@@ -4,7 +4,7 @@ import com.erstedigital.meetingappbackend.persistence.data.AgendaPoint;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Time;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -13,7 +13,10 @@ public class AgendaPointResponse {
     private Integer number;
     private String title;
     private String description;
-    private Time duration;
+    private Date start;
+    private Date end;
+    private Date actualStart;
+    private Date actualEnd;
     private String status;
     private Integer agendaId;
 
@@ -22,8 +25,11 @@ public class AgendaPointResponse {
         this.number = agendaPoint.getNumber();
         this.title = agendaPoint.getTitle();
         this.description = agendaPoint.getDescription();
-        this.duration = agendaPoint.getDuration();
+        this.start = agendaPoint.getStart();
+        this.end = agendaPoint.getEnd();
+        this.actualStart = agendaPoint.getActualStart();
+        this.actualEnd = agendaPoint.getActualEnd();
         this.status = agendaPoint.getStatus();
-        this.agendaId = agendaPoint.getAgendaId().getId();
+        this.agendaId = agendaPoint.getAgenda().getId();
     }
 }

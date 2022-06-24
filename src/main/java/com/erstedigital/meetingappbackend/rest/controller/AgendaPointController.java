@@ -23,8 +23,12 @@ public class AgendaPointController {
 
     @GetMapping
     public @ResponseBody
-    List<AgendaPointResponse> getAllAgendaPoints() {
-        return agendaPointService.getAll().stream().map(AgendaPointResponse::new).collect(Collectors.toList());
+    List<AgendaPointResponse> getAllAgendaPoints(@RequestParam("agendaId") Integer agendaId) {
+        if (agendaId == null) {
+            return agendaPointService.getAll().stream().map(AgendaPointResponse::new).collect(Collectors.toList());
+        } else {
+            return agendaPointService.getAll(agendaId).stream().map(AgendaPointResponse::new).collect(Collectors.toList());
+        }
     }
 
     @GetMapping(value = "/{id}")
@@ -37,6 +41,12 @@ public class AgendaPointController {
     public @ResponseBody
     ResponseEntity<AgendaPointResponse> addNewAgendaPoint(@RequestBody AgendaPointRequest body) throws NotFoundException {
         return new ResponseEntity<>(new AgendaPointResponse(agendaPointService.create(body)), HttpStatus.CREATED);
+    }
+
+    @PostMapping(path="/{id}")
+    public @ResponseBody
+    ResponseEntity<List<AgendaPointResponse>> addNewAgendaPoints(@PathVariable("id") Integer id, @RequestBody List<AgendaPointRequest> body) throws NotFoundException {
+        return new ResponseEntity<>(agendaPointService.create(body).stream().map(AgendaPointResponse::new).collect(Collectors.toList()), HttpStatus.CREATED);
     }
 
     @PutMapping(path="/{id}")

@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 @Setter
 public class AgendaResponse {
     private Integer id;
-    private List<Integer> meetingPoints;
+    private List<AgendaPointResponse> meetingPoints;
     private Integer meetingId;
 
     public AgendaResponse(Agenda agenda) {
         this.id = agenda.getId();
-        this.meetingPoints = agenda.getAgendaPoints().stream().map(AgendaPoint::getId).collect(Collectors.toList());
+        this.meetingPoints = agenda.getAgendaPoints().stream().map(AgendaPointResponse::new).collect(Collectors.toList());
         this.meetingId = agenda.getAgendaMeeting().getId();
     }
 }
