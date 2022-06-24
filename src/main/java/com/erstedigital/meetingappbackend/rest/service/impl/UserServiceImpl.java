@@ -9,6 +9,8 @@ import com.erstedigital.meetingappbackend.rest.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,13 +62,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findByMeeting(Integer id) {
-        return userRepository.findAllByMeetings_Id(id);
-    }
-
-    @Override
     public User create(UserRequest request) throws NotFoundException {
-        return userRepository.save(new User(request, positionService.findById(request.getPositionId())));
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if(user.isPresent()) {
+            return user.get();
+        } else {
+            return userRepository.save(new User(request, positionService.findById(request.getPositionId())));
+        }
     }
 
     @Override
@@ -103,11 +105,18 @@ public class UserServiceImpl implements UserService {
         if(request.getPositionId() != null) {
             user.setUserPosition(positionService.findById(request.getPositionId()));
         }
+
+        user.setModifiedAt(new Date(Calendar.getInstance().getTime().getTime()));
         return userRepository.save(user);
     }
 
     @Override
     public void delete(Integer id) throws NotFoundException {
         userRepository.delete(findById(id));
+    }
+
+    @Override
+    public List<User> getMeetingAttendees(Integer id) {
+        return userRepository.findMeetingAttendees(id);
     }
 }

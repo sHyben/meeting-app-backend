@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,7 +26,7 @@ public class MeetingRequest {
     private String notesUrl;
     private Integer organizerId;
     private Set<Integer> activities;
-    private Set<Integer> attendees;
+    private List<Integer> attendees;
     private String location;
     private Double latitude;
     private Double longitude;

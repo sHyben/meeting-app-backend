@@ -5,11 +5,11 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -31,15 +31,16 @@ public class User {
     @JoinColumn(name = "position_id")
     private Position userPosition;
 
-    @ManyToMany(mappedBy = "attendees")
-    private Set<Meeting> meetings;
+    @OneToMany(mappedBy = "attendanceUser")
+    @ToString.Exclude
+    private List<Attendance> attendances;
 
     public User(UserRequest request, Position position) {
         this.name = request.getName();
         this.email = request.getEmail();
         this.modifiedAt = new Date(Calendar.getInstance().getTime().getTime());
         this.userPosition = position;
-        this.meetings = new HashSet<>();
+        this.attendances = new ArrayList<>();
     }
 
     @Override

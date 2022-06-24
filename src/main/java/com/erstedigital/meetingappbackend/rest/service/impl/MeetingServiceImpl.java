@@ -4,11 +4,15 @@ import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.persistence.data.Activity;
 import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import com.erstedigital.meetingappbackend.persistence.repository.MeetingRepository;
+import com.erstedigital.meetingappbackend.rest.data.request.AttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
+import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.service.ActivityService;
+import com.erstedigital.meetingappbackend.rest.service.AttendanceService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
 import com.erstedigital.meetingappbackend.websockets.model.MeetingMessage;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,12 +25,14 @@ public class MeetingServiceImpl implements MeetingService {
     private final MeetingRepository meetingRepository;
     private final ActivityService activityService;
     private final UserService userService;
+    private final AttendanceService attendanceService;
 
     public MeetingServiceImpl(MeetingRepository meetingRepository, ActivityService activityService,
-                              UserService userService) {
+                              UserService userService, @Lazy AttendanceService attendanceService) {
         this.meetingRepository = meetingRepository;
         this.activityService = activityService;
         this.userService = userService;
+        this.attendanceService = attendanceService;
     }
 
     @Override
@@ -57,13 +63,14 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public Meeting create(MeetingRequest request) throws NotFoundException {
 
-        return meetingRepository.save(new Meeting(
-                    request,
-                    userService.findById(request.getOrganizerId()),
-                    activityService.findById(request.getActivities()),
-                    new HashSet<>(userService.findById(new ArrayList<>(request.getAttendees())))
-                )
-        );
+        Meeting meeting  = meetingRepository.save( new Meeting(
+                request,
+                userService.findById(request.getOrganizerId()),
+                activityService.findById(request.getActivities())
+        ));
+        request.getAttendees().add(request.getOrganizerId());
+        createAttendanceForMeeting(meeting.getId(), request.getAttendees());
+        return meeting;
     }
 
     @Override
@@ -139,6 +146,10 @@ public class MeetingServiceImpl implements MeetingService {
         if(request.getUrl() != null) {
             meeting.setUrl(request.getUrl());
         }
+        if(request.getApolloCode() != null) {
+            meeting.setApolloCode(request.getApolloCode());
+        }
+
         return meetingRepository.save(meeting);
      }
 
@@ -158,4 +169,21 @@ public class MeetingServiceImpl implements MeetingService {
     public void delete(Integer id) throws NotFoundException {
         meetingRepository.delete(findById(id));
     }
+
+    @Override
+    public void createAttendanceForMeeting(Integer meetingId, List<Integer> attendees) throws NotFoundException {
+        for (Integer userId : attendees) {
+            AttendanceRequest request = new AttendanceRequest();
+            request.setMeetingId(meetingId);
+            request.setUserId(userId);
+            attendanceService.create(request);
+        }
+    }
+
+    @Override
+    public List<Meeting> getMeetingsBetweenDatesFromUser(StatAttendanceRequest request) throws NotFoundException {
+        return meetingRepository.findByStartBetweenAndOrganizerLike(request.getStart(), request.getEnd(),
+                userService.findById(request.getUserId()));
+    }
+
 }

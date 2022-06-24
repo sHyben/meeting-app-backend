@@ -61,13 +61,9 @@ public class Meeting {
     @OneToMany(mappedBy="meeting")
     @ToString.Exclude
     private List<Note> notes;
-
-    @ManyToMany
-    @JoinTable(
-            name = "meeting_user",
-            joinColumns = @JoinColumn(name = "meeting_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> attendees;
+    @OneToMany(mappedBy = "attendanceMeeting")
+    @ToString.Exclude
+    private List<Attendance> attendances;
 
     @ManyToMany
     @JoinTable(
@@ -85,7 +81,7 @@ public class Meeting {
     private Double longitude;
     private String url;
 
-    public Meeting(MeetingRequest request, User user, Set<Activity> activities, Set<User> attendees) {
+    public Meeting(MeetingRequest request, User user, Set<Activity> activities) {
         this.exchangeId = request.getExchangeId();
         this.subject = request.getSubject();
         this.description = request.getDescription();
@@ -99,12 +95,13 @@ public class Meeting {
         this.notesUrl = request.getNotesUrl();
         this.organizer = user;
         this.agendas = new ArrayList<>();
-        this.attendees = new ArrayList<>(attendees);
         this.activities = activities;
+        this.attendances = new ArrayList<>();
         this.location = request.getLocation();
         this.latitude = request.getLatitude();
         this.longitude = request.getLongitude();
         this.url = request.getUrl();
+        this.apolloCode = request.getApolloCode();
     }
 
     public void addActivity(Activity activity) throws NotFoundException {

@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AttendeeRequest {
-    private String email;
+public class AttendanceRequest {
     private Integer feedbackRating;
     private String feedbackComment;
-    private String participation;
+    private boolean participation;
     private Integer meetingId;
-    private Integer positionId;
+    private Integer userId;
+    private Integer presenceTime;
 }
