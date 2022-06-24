@@ -23,8 +23,12 @@ public class UserController {
 
     @GetMapping
     public @ResponseBody
-    List<UserResponse> getAllUsers() {
-        return userService.getAll().stream().map(UserResponse::new).collect(Collectors.toList());
+    UserResponse getUserByMail(@RequestParam("email") String email) throws NotFoundException {
+        if (email != null) {
+            return new UserResponse(userService.findByEmail(email));
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @GetMapping(value = "/{id}")

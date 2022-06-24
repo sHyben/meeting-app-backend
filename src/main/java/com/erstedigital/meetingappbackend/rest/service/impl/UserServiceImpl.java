@@ -40,6 +40,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findById(List<Integer> id) throws NotFoundException {
+        ArrayList<User> users = new ArrayList<>();
+
+        id.forEach(user -> {
+            Optional<User> foundUser = userRepository.findById(user);
+            foundUser.ifPresent(users::add);
+        });
+
+        return users;
+    }
+
+    @Override
+    public User findByEmail(String email) throws NotFoundException {
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent()) {
+            return user.get();
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
+    @Override
     public User create(UserRequest request) throws NotFoundException {
         Optional<User> user = userRepository.findByEmail(request.getEmail());
         if(user.isPresent()) {

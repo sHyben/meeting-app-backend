@@ -1,14 +1,16 @@
 package com.erstedigital.meetingappbackend.persistence.data;
 
+import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,11 +29,15 @@ public class Meeting {
     private String description;
     @Column(name = "meeting_type")
     private String meetingType;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date start;
     @Column(name = "actual_start")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date actualStart;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date end;
     @Column(name = "actual_end")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date actualEnd;
     @Column(name = "meeting_cost")
     private Integer meetingCost;
@@ -50,9 +56,17 @@ public class Meeting {
     @ToString.Exclude
     private List<Attendance> attendances;
 
-    @ManyToOne
-    @JoinColumn(name = "activity_id")
-    private Activity activityId;
+    @ManyToMany
+    @JoinTable(
+            name = "meeting_activity",
+            joinColumns = @JoinColumn(name = "meeting_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_id"))
+    @ToString.Exclude
+    private Set<Activity> activities;
+
+    @OneToOne
+    @JoinColumn(name = "running_activity_id")
+    private Activity runningActivity;
 
     private String location;
     private Double latitude;
@@ -60,7 +74,7 @@ public class Meeting {
     private String url;
     private String apolloCode;
 
-    public Meeting(MeetingRequest request, User user, Activity activity) {
+    public Meeting(MeetingRequest request, User user, Set<Activity> activities) {
         this.exchangeId = request.getExchangeId();
         this.subject = request.getSubject();
         this.description = request.getDescription();
@@ -74,12 +88,26 @@ public class Meeting {
         this.organizer = user;
         this.agendas = new ArrayList<>();
         this.attendances = new ArrayList<>();
-        this.activityId = activity;
+        this.activities = activities;
         this.location = request.getLocation();
         this.latitude = request.getLatitude();
         this.longitude = request.getLongitude();
         this.url = request.getUrl();
         this.apolloCode = request.getApolloCode();
+    }
+
+    public void addActivity(Activity activity) throws NotFoundException {
+        if(activity != null) {
+            this.activities.add(activity);
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
+    public void removeActivity(Activity activity) {
+        if(activity != null) {
+            this.activities.remove(activity);
+        }
     }
 
     @Override

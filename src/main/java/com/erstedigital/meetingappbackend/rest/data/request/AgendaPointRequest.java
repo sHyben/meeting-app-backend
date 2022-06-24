@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Time;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -13,7 +13,10 @@ public class AgendaPointRequest {
     private Integer number;
     private String title;
     private String description;
-    private Time duration;
+    private Date start;
+    private Date end;
+    private Date actualStart;
+    private Date actualEnd;
     private String status;
     private Integer agendaId;
 }

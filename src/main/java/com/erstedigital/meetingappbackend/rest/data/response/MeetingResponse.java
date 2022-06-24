@@ -1,12 +1,10 @@
 package com.erstedigital.meetingappbackend.rest.data.response;
 
-import com.erstedigital.meetingappbackend.persistence.data.Agenda;
-import com.erstedigital.meetingappbackend.persistence.data.Attendance;
-import com.erstedigital.meetingappbackend.persistence.data.Meeting;
+import com.erstedigital.meetingappbackend.persistence.data.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +25,14 @@ public class MeetingResponse {
     private Integer organizerId;
     private List<Integer> agendas;
     private List<Integer> attendances;
-    private Integer activityId;
+    private List<Integer> attendees;
+    private List<Integer> activities;
     private String location;
     private Double latitude;
     private Double longitude;
     private String url;
     private String apolloCode;
+    private Integer runningActivity;
 
     public MeetingResponse(Meeting meeting) {
         this.id = meeting.getId();
@@ -49,11 +49,19 @@ public class MeetingResponse {
         this.organizerId = meeting.getOrganizer().getId();
         this.agendas = meeting.getAgendas().stream().map(Agenda::getId).collect(Collectors.toList());
         this.attendances = meeting.getAttendances().stream().map(Attendance::getId).collect(Collectors.toList());
-        this.activityId = meeting.getActivityId().getId();
+        this.attendees = meeting.getAttendances().stream().map(Attendance::getAttendanceUser).map(User::getId).collect(Collectors.toList());
+        this.activities = meeting.getActivities().stream().map(Activity::getId).collect(Collectors.toList());
         this.location = meeting.getLocation();
         this.latitude = meeting.getLatitude();
         this.longitude = meeting.getLongitude();
         this.url = meeting.getUrl();
         this.apolloCode = meeting.getApolloCode();
+        this.runningActivity = meeting.getRunningActivity().getId();
+        if (meeting.getRunningActivity() != null) {
+            this.runningActivity = meeting.getRunningActivity().getId();
+        } else {
+            this.runningActivity = -1;
+        }
+
     }
 }

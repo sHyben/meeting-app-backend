@@ -11,6 +11,10 @@ public interface UserService {
 
     User findById(Integer id) throws NotFoundException;
 
+    List<User> findById(List<Integer> id) throws NotFoundException;
+
+    User findByEmail(String email) throws NotFoundException;
+
     User create(UserRequest request) throws NotFoundException;
 
     List<User> create(List<UserRequest> request) throws NotFoundException;
