@@ -29,6 +29,12 @@ public class Meeting {
     private String description;
     @Column(name = "meeting_type")
     private String meetingType;
+
+    @Column(name = "apollo_code")
+    private String apolloCode;
+
+    @Column(name = "feedback_type")
+    private String feedbackType;
     @Temporal(TemporalType.TIMESTAMP)
     private Date start;
     @Column(name = "actual_start")
@@ -84,6 +90,7 @@ public class Meeting {
         this.subject = request.getSubject();
         this.description = request.getDescription();
         this.meetingType = request.getMeetingType();
+        this.feedbackType = request.getFeedbackType();
         this.start = request.getStart();
         this.actualStart = request.getActualStart();
         this.end = request.getEnd();

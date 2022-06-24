@@ -54,6 +54,10 @@ ALTER TABLE `meeting_user`
     ADD CONSTRAINT `meeting_user_ibfk_1` FOREIGN KEY (`meeting_id`) REFERENCES `meetings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `meeting_user_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE `meetings`
+    ADD COLUMN `apollo_code` VARCHAR(256) DEFAULT NULL,
+    ADD COLUMN `feedback_type` enum('normal','general','specific') COLLATE utf8_slovak_ci NOT NULL;
+
 ALTER TABLE `agenda_points`
     DROP COLUMN `duration`,
     ADD COLUMN `start` datetime DEFAULT NULL,

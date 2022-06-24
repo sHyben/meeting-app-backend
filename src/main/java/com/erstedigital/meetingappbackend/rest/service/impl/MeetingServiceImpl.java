@@ -97,6 +97,12 @@ public class MeetingServiceImpl implements MeetingService {
         if(request.getMeetingType() != null) {
             meeting.setMeetingType(request.getMeetingType());
         }
+        if(request.getFeedbackType() != null) {
+            meeting.setFeedbackType(request.getFeedbackType());
+        }
+        if(request.getApolloCode() != null) {
+            meeting.setApolloCode(request.getApolloCode());
+        }
         if(request.getStart() != null) {
             meeting.setStart(request.getStart());
         }

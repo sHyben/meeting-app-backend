@@ -16,6 +16,8 @@ public class MeetingResponse {
     private String subject;
     private String description;
     private String meetingType;
+    private String feedbackType;
+    private String apolloCode;
     private Date start;
     private Date actualStart;
     private Date end;
@@ -39,6 +41,7 @@ public class MeetingResponse {
         this.subject = meeting.getSubject();
         this.description = meeting.getDescription();
         this.meetingType = meeting.getMeetingType();
+        this.feedbackType = meeting.getFeedbackType();
         this.start = meeting.getStart();
         this.actualStart = meeting.getActualStart();
         this.end = meeting.getEnd();

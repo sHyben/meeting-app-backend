@@ -49,7 +49,7 @@ public class UserController {
 
     @GetMapping(path="/attendees/{id}")
     public @ResponseBody ResponseEntity<List<UserResponse>> getAttendees(@PathVariable("id") Integer id) {
-        return new ResponseEntity<>(userService.findByMeeting(id).stream().map(UserResponse::new).collect(Collectors.toList()), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.findByMeeting(id).stream().map(UserResponse::new).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @PutMapping(path="/{id}")
