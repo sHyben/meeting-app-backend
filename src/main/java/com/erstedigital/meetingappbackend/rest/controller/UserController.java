@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "https://www.bettermeetings.sk", maxAge = 3600)
-
+@CrossOrigin(origins = {"https://www.bettermeetings.sk", "http://localhost:3000"}, maxAge = 3600)
 @RestController
 @RequestMapping(path="/user")
 public class UserController {
@@ -59,9 +58,9 @@ public class UserController {
         return new ResponseEntity<>(userService.create(body).stream().map(UserResponse::new).collect(Collectors.toList()),  HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/attendees/{id}}")
+    @GetMapping(value = "/attendees/{id}")
     public @ResponseBody
     ResponseEntity<List<UserResponse>> getMeetingAttendees(@PathVariable("id") Integer id) {
-        return new ResponseEntity<>(userService.getMeetingAttendees(id).stream().map(UserResponse::new).collect(Collectors.toList()), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getMeetingAttendees(id).stream().map(attendee -> new UserResponse(attendee, id)).collect(Collectors.toList()), HttpStatus.OK);
     }
 }
