@@ -6,6 +6,9 @@ import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceReques
 import com.erstedigital.meetingappbackend.rest.service.StatisticsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 
 @CrossOrigin(origins = "https://www.bettermeetings.sk", maxAge = 3600)
 @RestController
@@ -27,6 +30,12 @@ public class StatisticsController {
     public @ResponseBody
     Statistics getAttendeeStatistics(@RequestBody StatAttendanceRequest body) throws NotFoundException {
         return statisticsService.getAttendeeStatistics(body);
+    }
+
+    @GetMapping(value = "/days")
+    public @ResponseBody
+    List<LocalDate> getDays(@RequestBody StatAttendanceRequest body) {
+        return statisticsService.returnDays(body);
     }
 }
 

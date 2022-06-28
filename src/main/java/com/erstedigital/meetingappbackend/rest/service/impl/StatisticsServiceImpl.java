@@ -10,9 +10,12 @@ import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.StatisticsService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -41,7 +44,9 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private Statistics getStatistics(List<Meeting> resultMeetings, StatAttendanceRequest body) throws NotFoundException {
         Statistics resultStatistics = new Statistics();
-        List<LocalDate> days = getDays(body.getStart().toLocalDate(), body.getEnd().toLocalDate());
+        LocalDate startDate = convertToLocalDate(body.getStart());
+        LocalDate endDate = convertToLocalDate(body.getEnd());
+        List<LocalDate> days = getDays(startDate, endDate);
         Integer totalMeetings = resultMeetings.size();
 
         List<List<Attendance>> attendanceList = getAttendances(resultMeetings);
@@ -62,7 +67,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     private List<LocalDate> getDays(LocalDate startDate, LocalDate endDate) {
-        long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         return IntStream.iterate(0, i -> i + 1)
                 .limit(numOfDaysBetween)
                 .mapToObj(startDate::plusDays)
@@ -89,15 +94,18 @@ public class StatisticsServiceImpl implements StatisticsService {
         Integer neutralFeedback = 0;
         for (List<Attendance> attendanceList : attendances) {
             for(Attendance attendance : attendanceList) {
+                if(attendance.getPresenceTime() == null) attendance.setPresenceTime(0);
                 totalHours += attendance.getPresenceTime();
                 totalAttendees += 1;
                 Integer rating = attendance.getFeedbackRating();
-                if(rating > 3) {
-                    positiveFeedback += 1;
-                } else if(rating == 3) {
-                    neutralFeedback += 1;
-                } else {
-                    negativeFeedback += 1;
+                if(rating != null) {
+                    if (rating > 3) {
+                        positiveFeedback += 1;
+                    } else if (rating == 3) {
+                        neutralFeedback += 1;
+                    } else {
+                        negativeFeedback += 1;
+                    }
                 }
             }
         }
@@ -109,5 +117,15 @@ public class StatisticsServiceImpl implements StatisticsService {
         result.add(neutralFeedback);
 
         return result;
+    }
+
+    private LocalDate convertToLocalDate(Date dateToConvert) {
+        return Instant.ofEpochMilli(dateToConvert.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
+    public List<LocalDate> returnDays(StatAttendanceRequest body) {
+        return getDays(convertToLocalDate(body.getStart()), convertToLocalDate(body.getEnd()));
     }
 }
