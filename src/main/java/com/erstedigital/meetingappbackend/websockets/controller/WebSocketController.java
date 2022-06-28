@@ -3,20 +3,16 @@ package com.erstedigital.meetingappbackend.websockets.controller;
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.persistence.AgendaPointState;
 import com.erstedigital.meetingappbackend.persistence.data.AgendaPoint;
+import com.erstedigital.meetingappbackend.persistence.data.Attendance;
 import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import com.erstedigital.meetingappbackend.persistence.data.Note;
 import com.erstedigital.meetingappbackend.rest.data.response.AgendaPointResponse;
 import com.erstedigital.meetingappbackend.rest.service.AgendaPointService;
+import com.erstedigital.meetingappbackend.rest.service.AttendanceService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.NoteService;
-import com.erstedigital.meetingappbackend.websockets.model.ActivityMessage;
-import com.erstedigital.meetingappbackend.websockets.model.AgendaMessage;
-import com.erstedigital.meetingappbackend.websockets.model.MeetingMessage;
-import com.erstedigital.meetingappbackend.websockets.model.NoteMessage;
-import com.erstedigital.meetingappbackend.websockets.response.ActivityOutputMessage;
-import com.erstedigital.meetingappbackend.websockets.response.AgendaOutputMessage;
-import com.erstedigital.meetingappbackend.websockets.response.MeetingOutputMessage;
-import com.erstedigital.meetingappbackend.websockets.response.NoteOutputMessage;
+import com.erstedigital.meetingappbackend.websockets.model.*;
+import com.erstedigital.meetingappbackend.websockets.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -30,21 +26,22 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = {"https://www.bettermeetings.sk","http://localhost:3000"}, maxAge = 3600)
 @Controller
 public class WebSocketController {
 
     private final NoteService noteService;
     private final AgendaPointService agendaPointService;
-
     private final MeetingService meetingService;
+    private final AttendanceService attendanceService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public WebSocketController(NoteService noteService, AgendaPointService agendaPointService, MeetingService meetingService, SimpMessagingTemplate messagingTemplate) {
+    public WebSocketController(NoteService noteService, AgendaPointService agendaPointService, MeetingService meetingService, AttendanceService attendanceService, SimpMessagingTemplate messagingTemplate) {
         this.noteService = noteService;
         this.messagingTemplate = messagingTemplate;
         this.agendaPointService = agendaPointService;
         this.meetingService = meetingService;
+        this.attendanceService = attendanceService;
     }
 
     @MessageMapping("/note/{meetingId}")
@@ -91,6 +88,19 @@ public class WebSocketController {
                         AgendaPointState.valueOf(agendaPoint.getStatus()),
                         agendaPoint.getActualStart(),
                         agendaPoint.getActualEnd()
+                )
+        );
+    }
+
+    @MessageMapping("/attendance/{meetingId}")
+    public void saveAttendance(@DestinationVariable Integer meetingId, @Payload AttendanceMesssage message) throws NotFoundException {
+
+        Attendance attendance = attendanceService.update(message);
+
+        messagingTemplate.convertAndSend(
+                "/attendance/messages/" + meetingId,
+                new AttendanceOutputMessage(
+                        attendance
                 )
         );
     }

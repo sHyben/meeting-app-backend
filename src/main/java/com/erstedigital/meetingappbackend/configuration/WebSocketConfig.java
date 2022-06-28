@@ -13,14 +13,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/note", "/agenda", "/activity", "/meeting");
+        config.enableSimpleBroker("/note", "/agenda", "/activity", "/meeting", "/attendance");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:3000")
+                .setAllowedOrigins("http://localhost:3000", "https://www.bettermeetings.sk")
                 .withSockJS();
     }
 }
