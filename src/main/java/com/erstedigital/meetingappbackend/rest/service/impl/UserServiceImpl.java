@@ -77,12 +77,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> create(List<UserRequest> request) throws NotFoundException {
-        List<User> newUsers = new ArrayList<>();
-        for (UserRequest userRequest : request) {
-            newUsers.add(this.create(userRequest));
+        List<User> newUserList = new ArrayList<>();
+        for (UserRequest userRequest: request) {
+            User user = userRepository.findByEmail(userRequest.getEmail())
+                    .orElseGet( () -> {
+                        try {
+                            return userRepository.save(new User(userRequest, positionService.findById(userRequest.getPositionId())));
+                        } catch (NotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+            newUserList.add(user);
         }
 
-        return newUsers;
+        return newUserList;
     }
 
     @Override

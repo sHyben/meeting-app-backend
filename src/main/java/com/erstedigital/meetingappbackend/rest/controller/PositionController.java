@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @CrossOrigin(origins = {"https://www.bettermeetings.sk","http://localhost:3000"}, maxAge = 3600)@RestController
+
 @RequestMapping(path="/position")
 public class PositionController {
     private final PositionService positionService;
