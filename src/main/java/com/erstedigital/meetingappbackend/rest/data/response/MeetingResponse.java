@@ -56,7 +56,10 @@ public class MeetingResponse {
         this.longitude = meeting.getLongitude();
         this.url = meeting.getUrl();
         this.apolloCode = meeting.getApolloCode();
+<<<<<<< HEAD
         // this.runningActivity = meeting.getRunningActivity().getId();
+=======
+>>>>>>> fa30161f16497fb2920f23b460e5ceba6372af8e
         if (meeting.getRunningActivity() != null) {
             this.runningActivity = meeting.getRunningActivity().getId();
         } else {

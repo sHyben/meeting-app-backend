@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -31,6 +32,9 @@ public class Attendance {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User attendanceUser;
+
+    @Column(name = "last_joined_at")
+    private Date lastJoinedAt;
 
     @Column(name = "presence_time")
     private Integer presenceTime;

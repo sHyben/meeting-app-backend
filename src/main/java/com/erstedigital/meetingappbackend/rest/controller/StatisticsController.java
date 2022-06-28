@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 
+
 @CrossOrigin(origins = {"https://www.bettermeetings.sk","http://localhost:3000"}, maxAge = 3600)@RestController
+
 @RequestMapping(path="/statistics")
 public class StatisticsController {
     private final StatisticsService statisticsService;

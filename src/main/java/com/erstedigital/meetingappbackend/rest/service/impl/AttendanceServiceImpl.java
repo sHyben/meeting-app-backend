@@ -7,6 +7,7 @@ import com.erstedigital.meetingappbackend.rest.data.request.AttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.service.AttendanceService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
+import com.erstedigital.meetingappbackend.websockets.model.AttendanceMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,6 +65,25 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         if(request.getPresenceTime() != null) {
             attendance.setPresenceTime(request.getPresenceTime());
+        }
+        if(request.getLastJoinedAt() != null) {
+            attendance.setLastJoinedAt(request.getLastJoinedAt());
+        }
+
+        return attendanceRepository.save(attendance);
+    }
+
+    @Override
+    public Attendance update(AttendanceMessage message) throws NotFoundException {
+        Attendance attendance = findById(message.getId());
+        if(message.getParticipation() != null) {
+            attendance.setParticipation(message.getParticipation());
+        }
+        if(message.getPresentTime() != null) {
+            attendance.setPresenceTime(message.getPresentTime());
+        }
+        if(message.getLastJoinedAt() != null) {
+            attendance.setLastJoinedAt(message.getLastJoinedAt());
         }
 
         return attendanceRepository.save(attendance);

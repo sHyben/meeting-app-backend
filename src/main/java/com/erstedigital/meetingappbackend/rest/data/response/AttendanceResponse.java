@@ -4,6 +4,8 @@ import com.erstedigital.meetingappbackend.persistence.data.Attendance;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class AttendanceResponse {
@@ -14,6 +16,7 @@ public class AttendanceResponse {
     private Integer meetingId;
     private Integer userId;
     private Integer presenceTime;
+    private Date lastJoinedAt;
 
     public AttendanceResponse(Attendance attendance) {
         this.id = attendance.getId();
@@ -23,5 +26,6 @@ public class AttendanceResponse {
         this.meetingId = attendance.getAttendanceMeeting().getId();
         this.userId = attendance.getAttendanceUser().getId();
         this.presenceTime = attendance.getPresenceTime();
+        this.lastJoinedAt = attendance.getLastJoinedAt();
     }
 }

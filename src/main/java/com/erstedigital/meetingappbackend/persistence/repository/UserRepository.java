@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByName(String name);
     Optional<User> findByEmail(String email);
 
-    @Query("select u from User u join Attendance a on u.id = a.attendanceUser.id where a.attendanceMeeting.id = :meetingId")
+    @Query("select distinct u from User u join Attendance a on u.id = a.attendanceUser.id where a.attendanceMeeting.id = :meetingId")
     List<User> findMeetingAttendees(@Param("meetingId") Integer meetingId);
 }

@@ -4,6 +4,7 @@ import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.persistence.data.Attendance;
 import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import com.erstedigital.meetingappbackend.rest.data.Statistics;
+import com.erstedigital.meetingappbackend.rest.data.StatisticsDay;
 import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.service.AttendanceService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,8 +62,30 @@ public class StatisticsServiceImpl implements StatisticsService {
         resultStatistics.setNegativeFeedback(attendanceNumbers.get(3));
         resultStatistics.setNeutralFeedback(attendanceNumbers.get(4));
 
-        //TODO get statistics for days
+        List<Integer> durations = getDurationStats(resultMeetings);
+        resultStatistics.setOnTime(durations.get(0));
+        resultStatistics.setUnderTime(durations.get(1));
+        resultStatistics.setOverTime(durations.get(2));
 
+        List<StatisticsDay> statDays = new ArrayList<>();
+        //TODO get statistics for days
+        for(LocalDate day : days) {
+            int invited = 0;
+            int attended = 0;
+            int time = 0;
+            for(int i = 0; i < resultMeetings.size(); i++) {
+                if(convertToLocalDate(resultMeetings.get(i).getStart()) == day) {
+                    time += resultMeetings.get(i).getActualEnd().getTime() - resultMeetings.get(i).getActualStart().getTime();
+                    for(Attendance attendance : attendanceList.get(i)) {
+                        invited += 1;
+                        if(attendance.isParticipation()) attended += 1;
+                    }
+                }
+            }
+
+            statDays.add(new StatisticsDay(day, invited, attended, time));
+        }
+        resultStatistics.setStatisticsDays(statDays);
 
         return resultStatistics;
     }
@@ -117,6 +141,38 @@ public class StatisticsServiceImpl implements StatisticsService {
         result.add(neutralFeedback);
 
         return result;
+    }
+
+    //TODO add time offset
+    private List<Integer> getDurationStats(List<Meeting> meetings) {
+        Integer onTime = 0;
+        Integer underTime = 0;
+        Integer overTime = 0;
+        for(Meeting meeting : meetings) {
+            Date start = meeting.getStart();
+            Date end = meeting.getEnd();
+            Date actualStart = meeting.getActualStart();
+            Date actualEnd = meeting.getActualEnd();
+
+             if(meeting.getActualStart() != null && meeting.getActualEnd() != null) {
+                 if(actualEnd.getTime() - actualStart.getTime() ==
+                         end.getTime() - start.getTime()) {
+                     onTime += 1;
+                 }
+
+                 if(actualEnd.getTime() - actualStart.getTime() <
+                         end.getTime() - start.getTime()) {
+                    underTime += 1;
+                 }
+
+                 if(actualEnd.getTime() - actualStart.getTime() >
+                         end.getTime() - start.getTime()) {
+                    overTime += 1;
+                 }
+             }
+        }
+
+        return new ArrayList<>(Arrays.asList(onTime, underTime, overTime));
     }
 
     private LocalDate convertToLocalDate(Date dateToConvert) {
