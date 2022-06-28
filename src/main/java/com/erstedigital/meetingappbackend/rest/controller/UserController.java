@@ -2,7 +2,9 @@ package com.erstedigital.meetingappbackend.rest.controller;
 
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.rest.data.request.UserRequest;
+import com.erstedigital.meetingappbackend.rest.data.response.AttendanceResponse;
 import com.erstedigital.meetingappbackend.rest.data.response.UserResponse;
+import com.erstedigital.meetingappbackend.rest.service.AttendanceService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +13,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "https://www.bettermeetings.sk", maxAge = 3600)
+@CrossOrigin(origins = {"https://www.bettermeetings.sk","http://localhost:3000"}, maxAge = 3600)
 @RestController
 @RequestMapping(path="/user")
 public class UserController {
     private final UserService userService;
+    private final AttendanceService attendanceService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AttendanceService attendanceService) {
+        this.attendanceService = attendanceService;
         this.userService = userService;
     }
 
@@ -59,9 +63,9 @@ public class UserController {
         return new ResponseEntity<>(userService.create(body).stream().map(UserResponse::new).collect(Collectors.toList()),  HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/attendees/{id}}")
+    @GetMapping(value = "/attendees/{id}")
     public @ResponseBody
     ResponseEntity<List<UserResponse>> getMeetingAttendees(@PathVariable("id") Integer id) {
-        return new ResponseEntity<>(userService.getMeetingAttendees(id).stream().map(UserResponse::new).collect(Collectors.toList()), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getMeetingAttendees(id).stream().map( attendee -> new UserResponse(attendee, id)).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

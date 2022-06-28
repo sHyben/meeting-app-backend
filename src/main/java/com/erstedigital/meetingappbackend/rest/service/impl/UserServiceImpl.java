@@ -1,6 +1,7 @@
 package com.erstedigital.meetingappbackend.rest.service.impl;
 
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
+import com.erstedigital.meetingappbackend.persistence.data.Attendance;
 import com.erstedigital.meetingappbackend.persistence.data.User;
 import com.erstedigital.meetingappbackend.persistence.repository.UserRepository;
 import com.erstedigital.meetingappbackend.rest.data.request.UserRequest;
@@ -76,19 +77,17 @@ public class UserServiceImpl implements UserService {
         ArrayList<User> newUserList = new ArrayList<>();
 
         // find user by mail and create new user if he does not exist
-        request.forEach(userRequest -> {
-            try {
-                User user = findByEmail(userRequest.getEmail());
-                newUserList.add(user);
-            } catch (NotFoundException e) {
-                try {
-                    User user = userRepository.save(new User(userRequest, positionService.findById(userRequest.getPositionId())));
-                    newUserList.add(user);
-                } catch (NotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
+        for (UserRequest userRequest: request) {
+            User user = userRepository.findByEmail(userRequest.getEmail())
+                    .orElseGet( () -> {
+                        try {
+                            return userRepository.save(new User(userRequest, positionService.findById(userRequest.getPositionId())));
+                        } catch (NotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+            newUserList.add(user);
+        }
 
         return newUserList;
     }

@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS `attendances` (
   `participation` tinyint(1) NOT NULL DEFAULT '0',
   `meeting_id` int UNSIGNED NOT NULL,
   `user_id` int UNSIGNED NOT NULL,
+  `last_joined_at` datetime DEFAULT NULL,
   `presence_time` int DEFAULT '0',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
@@ -58,7 +59,7 @@ ALTER TABLE `meeting_activity`
 
 ALTER TABLE `meetings`
     ADD COLUMN `apollo_code` VARCHAR(256) DEFAULT NULL,
-    ADD COLUMN `feedback_type` enum('normal','general','specific') COLLATE utf8_slovak_ci NOT NULL;
+    ADD COLUMN `feedback_type` enum('none','general','specific') COLLATE utf8_slovak_ci NOT NULL;
 
 ALTER TABLE `agenda_points`
     DROP COLUMN `duration`,
