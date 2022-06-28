@@ -67,7 +67,11 @@ public class UserServiceImpl implements UserService {
         if(user.isPresent()) {
             return user.get();
         } else {
-            return userRepository.save(new User(request, positionService.findById(request.getPositionId())));
+            if(request.getPositionId() != null) {
+                return userRepository.save(new User(request, positionService.findById(request.getPositionId())));
+            } else {
+                return userRepository.save(new User(request, null));
+            }
         }
     }
 

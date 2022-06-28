@@ -171,8 +171,9 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     public List<Meeting> getOrganizerMeetings(StatAttendanceRequest request) throws NotFoundException {
-        return meetingRepository.findByStartBetweenAndOrganizerLike(request.getStart(), request.getEnd(),
-                userService.findById(request.getUserId()));
+        /*return meetingRepository.findByStartBetweenAndOrganizerLike(request.getStart(), request.getEnd(),
+                userService.findById(request.getUserId()));*/
+        return meetingRepository.getOrganizerMeetings(request.getStart(), request.getEnd(), request.getUserId());
     }
 
     @Override
