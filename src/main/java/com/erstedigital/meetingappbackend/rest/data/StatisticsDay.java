@@ -3,17 +3,17 @@ package com.erstedigital.meetingappbackend.rest.data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 public class StatisticsDay {
-    private Date day;
+    private LocalDate day;
     private Integer invited;
     private Integer attended;
     private Integer time;
 
-    public StatisticsDay(Date day, Integer invited, Integer attended, Integer time) {
+    public StatisticsDay(LocalDate day, Integer invited, Integer attended, Integer time) {
         this.day = day;
         this.invited = invited;
         this.attended = attended;

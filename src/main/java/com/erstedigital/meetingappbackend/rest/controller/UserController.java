@@ -66,6 +66,6 @@ public class UserController {
     @GetMapping(value = "/attendees/{id}")
     public @ResponseBody
     ResponseEntity<List<UserResponse>> getMeetingAttendees(@PathVariable("id") Integer id) {
-        return new ResponseEntity<>(userService.getMeetingAttendees(id).stream().map( attendee -> new UserResponse(attendee, id)).collect(Collectors.toList()), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getMeetingAttendees(id).stream().map(attendee -> new UserResponse(attendee, id)).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

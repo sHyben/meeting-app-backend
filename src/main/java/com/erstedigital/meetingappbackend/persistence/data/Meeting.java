@@ -29,10 +29,8 @@ public class Meeting {
     private String description;
     @Column(name = "meeting_type")
     private String meetingType;
-
     @Column(name = "apollo_code")
     private String apolloCode;
-
     @Column(name = "feedback_type")
     private String feedbackType;
     @Temporal(TemporalType.TIMESTAMP)

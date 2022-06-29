@@ -8,6 +8,8 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.util.*;
 
+//TODO Save image to our DB instead of link
+
 @Getter
 @Setter
 @ToString

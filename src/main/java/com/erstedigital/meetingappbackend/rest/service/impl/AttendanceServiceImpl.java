@@ -7,7 +7,7 @@ import com.erstedigital.meetingappbackend.rest.data.request.AttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.service.AttendanceService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
-import com.erstedigital.meetingappbackend.websockets.model.AttendanceMesssage;
+import com.erstedigital.meetingappbackend.websockets.model.AttendanceMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public Attendance update(AttendanceMesssage message) throws NotFoundException {
+    public Attendance update(AttendanceMessage message) throws NotFoundException {
         Attendance attendance = findById(message.getId());
         if(message.getParticipation() != null) {
             attendance.setParticipation(message.getParticipation());
@@ -92,5 +92,10 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public void delete(Integer id) throws NotFoundException {
         attendanceRepository.delete(findById(id));
+    }
+
+    @Override
+    public List<Attendance> getMeetingAttendances(Integer id) throws NotFoundException {
+        return attendanceRepository.findByAttendanceMeeting(meetingService.findById(id));
     }
 }
