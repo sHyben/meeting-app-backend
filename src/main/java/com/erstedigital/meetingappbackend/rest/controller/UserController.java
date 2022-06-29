@@ -2,7 +2,6 @@ package com.erstedigital.meetingappbackend.rest.controller;
 
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.rest.data.request.UserRequest;
-import com.erstedigital.meetingappbackend.rest.data.response.AttendanceResponse;
 import com.erstedigital.meetingappbackend.rest.data.response.UserResponse;
 import com.erstedigital.meetingappbackend.rest.service.AttendanceService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;

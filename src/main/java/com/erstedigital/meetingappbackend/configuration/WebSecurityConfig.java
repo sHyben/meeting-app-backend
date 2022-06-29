@@ -19,19 +19,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2ResourceServer().jwt();
     }
 
-    // @Override
-    // protected void configure(HttpSecurity http) throws Exception {
-    //     http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
-    //             .antMatchers("/**").permitAll().anyRequest().authenticated()
-    //             .and().formLogin().permitAll().and().logout().permitAll().and().httpBasic();
-    //     http.cors().disable().csrf().disable();
-    // }
+    // --- For postman testing only ---
+/*     @Override
+     protected void configure(HttpSecurity http) throws Exception {
+         http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
+                 .antMatchers("/**").permitAll().anyRequest().authenticated()
+                 .and().formLogin().permitAll().and().logout().permitAll().and().httpBasic();
+         http.cors().disable().csrf().disable();
+     }*/
 
-
-    // For postman testing only
-/*   @Override
+/*    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().disable().csrf().disable();
     }*/
-
+    // ---------------------------------
 }
