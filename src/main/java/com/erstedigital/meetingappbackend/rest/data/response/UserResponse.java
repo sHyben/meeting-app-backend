@@ -21,7 +21,11 @@ public class UserResponse {
         this.name = user.getName();
         this.email = user.getEmail();
         this.modifiedAt = user.getModifiedAt();
-        this.positionId = user.getUserPosition().getId();
+        if(user.getUserPosition() != null) {
+            this.positionId = user.getUserPosition().getId();
+        } else {
+            this.positionId = null;
+        }
     }
 
     public UserResponse(User user, Integer meetingId) {

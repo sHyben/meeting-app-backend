@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-    @Override
+/*    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .authorizeRequests()
@@ -17,7 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer().jwt();
-    }
+    }*/
 
     // @Override
     // protected void configure(HttpSecurity http) throws Exception {
@@ -29,9 +29,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     // For postman testing only
-/*   @Override
+   @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().disable().csrf().disable();
-    }*/
+    }
 
 }
