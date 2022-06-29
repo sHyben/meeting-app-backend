@@ -11,6 +11,8 @@ import java.util.List;
 public interface MeetingService {
     List<Meeting> getAll();
 
+    List<Meeting> getAll(Integer userId) throws NotFoundException;
+
     Meeting findById(Integer id) throws NotFoundException;
 
     Meeting findByExchangeId(String id) throws NotFoundException;

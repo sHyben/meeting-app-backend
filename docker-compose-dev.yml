@@ -1,0 +1,49 @@
+version: '3.3'
+
+services:
+  #service 1: definition of mysql database
+  db:
+    platform: linux/x86_64
+    image: mysql:latest
+    container_name: meetingapp-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=spring
+      - MYSQL_DATABASE=meetingapp-db
+    ports:
+      - "3306:3306"
+    restart: always
+
+  #service 2: definition of phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: php-myadmin
+    ports:
+      - "8082:80"
+    restart: always
+
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: spring
+
+  #service 3: definition of spring-boot app
+  customerservice:
+    image: meeting-app-backend
+    volumes:
+      - "./src:/src"
+    container_name: meeting-app-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+
+    depends_on:
+      - db
+    environment:
+      #SPRING_JPA_HIBERNATE_DLL-AUTO: create-drop
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/meetingapp-db?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: spring

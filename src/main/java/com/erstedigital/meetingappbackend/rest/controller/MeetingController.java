@@ -25,8 +25,12 @@ public class MeetingController {
 
     @GetMapping
     public @ResponseBody
-    List<MeetingResponse> getAllMeetings() {
-        return meetingService.getAll().stream().map(MeetingResponse::new).collect(Collectors.toList());
+    List<MeetingResponse> getAllMeetings(@RequestParam("userId") Integer userId) {
+        if (userId != null) {
+            return meetingService.getAll().stream().map(MeetingResponse::new).collect(Collectors.toList());
+        } else {
+            return meetingService.getAll().stream().map(MeetingResponse::new).collect(Collectors.toList());
+        }
     }
 
     @GetMapping(value = "/{id}")
