@@ -25,9 +25,9 @@ public class MeetingController {
 
     @GetMapping
     public @ResponseBody
-    List<MeetingResponse> getAllMeetings(@RequestParam("userId") Integer userId) {
+    List<MeetingResponse> getAllMeetings(@RequestParam(name = "userId", required = false) Integer userId) throws NotFoundException {
         if (userId != null) {
-            return meetingService.getAll().stream().map(MeetingResponse::new).collect(Collectors.toList());
+            return meetingService.getAll(userId).stream().map(MeetingResponse::new).collect(Collectors.toList());
         } else {
             return meetingService.getAll().stream().map(MeetingResponse::new).collect(Collectors.toList());
         }
