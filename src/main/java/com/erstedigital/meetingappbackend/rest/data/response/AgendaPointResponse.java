@@ -18,7 +18,6 @@ public class AgendaPointResponse {
     private Date end;
 
     private Date actualStart;
-
     private Date actualEnd;
     private String status;
     private Integer agendaId;

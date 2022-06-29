@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class MeetingServiceImpl implements MeetingService {
@@ -81,7 +84,6 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     public Meeting create(MeetingRequest request) throws NotFoundException {
-
         Meeting meeting  = meetingRepository.save( new Meeting(
                 request,
                 userService.findById(request.getOrganizerId()),
@@ -184,13 +186,14 @@ public class MeetingServiceImpl implements MeetingService {
          return meetingRepository.save(meeting);
     }
 
+
     @Override
     public void delete(Integer id) throws NotFoundException {
         meetingRepository.delete(findById(id));
     }
 
     @Override
-    public void createAttendanceForMeeting(Integer meetingId, List<Integer> attendees) throws NotFoundException {
+    public void createAttendanceForMeeting(Integer meetingId, Set<Integer> attendees) throws NotFoundException {
         for (Integer userId : attendees) {
             AttendanceRequest request = new AttendanceRequest();
             request.setMeetingId(meetingId);
@@ -200,9 +203,16 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public List<Meeting> getMeetingsBetweenDatesFromUser(StatAttendanceRequest request) throws NotFoundException {
-        return meetingRepository.findByStartBetweenAndOrganizerLike(request.getStart(), request.getEnd(),
-                userService.findById(request.getUserId()));
+    public List<Meeting> getOrganizerMeetings(StatAttendanceRequest request) throws NotFoundException {
+        /*return meetingRepository.findByStartBetweenAndOrganizerLike(request.getStart(), request.getEnd(),
+                userService.findById(request.getUserId()));*/
+        return meetingRepository.getOrganizerMeetings(request.getStart(), request.getEnd(), request.getUserId());
+    }
+
+    @Override
+    public List<Meeting> getAttendeeMeetings(StatAttendanceRequest request) {
+        return meetingRepository.getAttendeeMeetings(request.getStart(), request.getEnd(),
+                request.getUserId());
     }
 
 }

@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NoteOutputMessage {
-
     private Integer id;
     private String from;
     private String text;

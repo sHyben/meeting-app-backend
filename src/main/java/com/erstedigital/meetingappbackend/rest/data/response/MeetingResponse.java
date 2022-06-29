@@ -34,7 +34,6 @@ public class MeetingResponse {
     private Double latitude;
     private Double longitude;
     private String url;
-
     private Integer runningActivity;
 
     public MeetingResponse(Meeting meeting) {
@@ -65,5 +64,12 @@ public class MeetingResponse {
             this.runningActivity = -1;
         }
         this.apolloCode = meeting.getApolloCode();
+
+        if (meeting.getRunningActivity() != null) {
+            this.runningActivity = meeting.getRunningActivity().getId();
+        } else {
+            this.runningActivity = -1;
+        }
+
     }
 }

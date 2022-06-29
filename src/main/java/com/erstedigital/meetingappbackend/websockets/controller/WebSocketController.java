@@ -93,7 +93,7 @@ public class WebSocketController {
     }
 
     @MessageMapping("/attendance/{meetingId}")
-    public void saveAttendance(@DestinationVariable Integer meetingId, @Payload AttendanceMesssage message) throws NotFoundException {
+    public void saveAttendance(@DestinationVariable Integer meetingId, @Payload AttendanceMessage message) throws NotFoundException {
 
         Attendance attendance = attendanceService.update(message);
 
