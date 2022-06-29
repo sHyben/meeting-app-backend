@@ -9,4 +9,6 @@ ALTER TABLE `attendances`
 ALTER TABLE  `meetings`
     MODIFY `feedback_type` enum('none','general','specific') COLLATE utf8_slovak_ci NOT NULL;
 
+ALTER TABLE `agenda_points`
+    MODIFY COLUMN `status` enum('PENDING','ONGOING', 'DONE', 'SKIPPED') COLLATE utf8_slovak_ci NOT NULL DEFAULT 'PENDING';
     COMMIT;

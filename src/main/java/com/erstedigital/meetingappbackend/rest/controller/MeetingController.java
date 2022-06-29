@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@CrossOrigin(origins = {"https://www.bettermeetings.sk","http://localhost:3000"}, maxAge = 3600)@RestController
-
+@CrossOrigin(origins = {"https://www.bettermeetings.sk","http://localhost:3000"}, maxAge = 3600)
+@RestController
 @RequestMapping(path="/meetings")
 public class MeetingController {
     private final MeetingService meetingService;
