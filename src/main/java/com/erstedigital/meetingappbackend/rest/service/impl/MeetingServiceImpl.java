@@ -3,6 +3,7 @@ package com.erstedigital.meetingappbackend.rest.service.impl;
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.persistence.data.Activity;
 import com.erstedigital.meetingappbackend.persistence.data.Meeting;
+import com.erstedigital.meetingappbackend.persistence.data.User;
 import com.erstedigital.meetingappbackend.persistence.repository.MeetingRepository;
 import com.erstedigital.meetingappbackend.rest.data.request.AttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
@@ -15,10 +16,8 @@ import com.erstedigital.meetingappbackend.websockets.model.MeetingMessage;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MeetingServiceImpl implements MeetingService {
@@ -38,6 +37,26 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public List<Meeting> getAll() {
         return meetingRepository.findAll();
+    }
+
+    @Override
+    public List<Meeting> getAll(Integer userId) throws NotFoundException {
+        List<Meeting> meetings = meetingRepository.findAll();
+        User user = userService.findById(userId);
+
+        List<Meeting> userMeetings = meetings
+                .stream()
+                .filter(meeting -> Objects.equals(meeting.getOrganizer().getId(), userId))
+                .collect(Collectors.toList());
+
+        userMeetings.addAll(
+                meetings
+                        .stream()
+                        .filter(meeting -> meeting.getAttendances().contains(user))
+                        .collect(Collectors.toList())
+        );
+
+        return userMeetings;
     }
 
     @Override
