@@ -68,7 +68,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         resultStatistics.setOverTime(durations.get(2));
 
         List<StatisticsDay> statDays = new ArrayList<>();
-        //TODO get statistics for days
+
         for(LocalDate day : days) {
             int invited = 0;
             int attended = 0;

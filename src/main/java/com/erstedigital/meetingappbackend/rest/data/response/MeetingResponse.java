@@ -63,13 +63,7 @@ public class MeetingResponse {
         } else {
             this.runningActivity = -1;
         }
+
         this.apolloCode = meeting.getApolloCode();
-
-        if (meeting.getRunningActivity() != null) {
-            this.runningActivity = meeting.getRunningActivity().getId();
-        } else {
-            this.runningActivity = -1;
-        }
-
     }
 }

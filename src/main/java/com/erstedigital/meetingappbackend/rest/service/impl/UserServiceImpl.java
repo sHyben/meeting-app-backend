@@ -1,7 +1,6 @@
 package com.erstedigital.meetingappbackend.rest.service.impl;
 
 import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
-import com.erstedigital.meetingappbackend.persistence.data.Attendance;
 import com.erstedigital.meetingappbackend.persistence.data.User;
 import com.erstedigital.meetingappbackend.persistence.repository.UserRepository;
 import com.erstedigital.meetingappbackend.rest.data.request.UserRequest;
