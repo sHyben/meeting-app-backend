@@ -12,7 +12,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .authorizeRequests()
-                .antMatchers("/v2/api-docs", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**").permitAll()
+                .antMatchers("/v2/api-docs", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/ws/**").permitAll()
                 .and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
