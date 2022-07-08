@@ -33,21 +33,21 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Statistics getOrganizerStatistics(StatAttendanceRequest body) throws NotFoundException {
-        List<Meeting> resultMeetings = meetingService.getOrganizerMeetings(body);
-        return getStatistics(resultMeetings, body);
+    public Statistics getOrganizerStatistics(Integer userId, Date start, Date end) throws NotFoundException {
+        List<Meeting> resultMeetings = meetingService.getOrganizerMeetings(userId, start, end);
+        return getStatistics(resultMeetings, start, end);
     }
 
     @Override
-    public Statistics getAttendeeStatistics(StatAttendanceRequest body) throws NotFoundException {
-        List<Meeting> resultMeetings = meetingService.getAttendeeMeetings(body);
-        return getStatistics(resultMeetings, body);
+    public Statistics getAttendeeStatistics(Integer userId, Date start, Date end) throws NotFoundException {
+        List<Meeting> resultMeetings = meetingService.getAttendeeMeetings(userId, start, end);
+        return getStatistics(resultMeetings, start, end);
     }
 
-    private Statistics getStatistics(List<Meeting> resultMeetings, StatAttendanceRequest body) throws NotFoundException {
+    private Statistics getStatistics(List<Meeting> resultMeetings, Date start, Date end) throws NotFoundException {
         Statistics resultStatistics = new Statistics();
-        LocalDate startDate = convertToLocalDate(body.getStart());
-        LocalDate endDate = convertToLocalDate(body.getEnd());
+        LocalDate startDate = convertToLocalDate(start);
+        LocalDate endDate = convertToLocalDate(end);
         List<LocalDate> days = getDays(startDate, endDate);
         Integer totalMeetings = resultMeetings.size();
 

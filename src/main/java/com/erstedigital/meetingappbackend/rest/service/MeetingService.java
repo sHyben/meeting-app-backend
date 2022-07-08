@@ -6,6 +6,7 @@ import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import com.erstedigital.meetingappbackend.websockets.model.MeetingMessage;
 import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -30,8 +31,8 @@ public interface MeetingService {
 
     void createAttendanceForMeeting(Integer id, Set<Integer> attendees) throws NotFoundException;
 
-    List<Meeting> getOrganizerMeetings(StatAttendanceRequest request) throws NotFoundException;
+    List<Meeting> getOrganizerMeetings(Integer userId, Date start, Date end) throws NotFoundException;
 
-    List<Meeting> getAttendeeMeetings(StatAttendanceRequest request);
+    List<Meeting> getAttendeeMeetings(Integer userId, Date start, Date end);
 
 }
