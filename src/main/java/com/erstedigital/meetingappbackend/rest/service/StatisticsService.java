@@ -5,12 +5,13 @@ import com.erstedigital.meetingappbackend.rest.data.Statistics;
 import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface StatisticsService {
-    Statistics getOrganizerStatistics(StatAttendanceRequest body) throws NotFoundException;
+    Statistics getOrganizerStatistics(Integer userId, Date start, Date end) throws NotFoundException;
 
-    Statistics getAttendeeStatistics(StatAttendanceRequest body) throws NotFoundException;
+    Statistics getAttendeeStatistics(Integer userId, Date start, Date end) throws NotFoundException;
 
     List<LocalDate> returnDays(StatAttendanceRequest body);
 }

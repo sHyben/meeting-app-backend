@@ -65,7 +65,7 @@ public class MeetingController {
     @GetMapping(value = "/statistics/meetings")
     public @ResponseBody
     StatAttendanceResponse getMeetingsBetweenDatesFromUser(@RequestBody StatAttendanceRequest body) throws NotFoundException {
-        return new StatAttendanceResponse(meetingService.getOrganizerMeetings(body));
+        return new StatAttendanceResponse(meetingService.getOrganizerMeetings(body.getUserId(), body.getStart(), body.getEnd()));
     }
 
 }
