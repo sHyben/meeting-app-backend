@@ -52,9 +52,8 @@ public class StatisticsServiceImpl implements StatisticsService {
         Integer totalMeetings = resultMeetings.size();
 
         List<List<Attendance>> attendanceList = getAttendances(resultMeetings);
-
         List<Integer> attendanceNumbers = getAttendanceNumbers(attendanceList);
-
+        System.out.println(attendanceList);
         resultStatistics.setTotalHours(attendanceNumbers.get(0));
         resultStatistics.setTotalMeetings(totalMeetings);
         resultStatistics.setTotalAttendees(attendanceNumbers.get(1));
@@ -74,11 +73,12 @@ public class StatisticsServiceImpl implements StatisticsService {
             int attended = 0;
             int time = 0;
             for(int i = 0; i < resultMeetings.size(); i++) {
-                if(convertToLocalDate(resultMeetings.get(i).getStart()) == day) {
-                    time += resultMeetings.get(i).getActualEnd().getTime() - resultMeetings.get(i).getActualStart().getTime();
+                if(convertToLocalDate(resultMeetings.get(i).getStart()).isEqual(day)) {
+                    //time += resultMeetings.get(i).getActualEnd().getTime() - resultMeetings.get(i).getActualStart().getTime();
                     for(Attendance attendance : attendanceList.get(i)) {
                         invited += 1;
                         if(attendance.isParticipation()) attended += 1;
+                        time += attendance.getPresenceTime();
                     }
                 }
             }
