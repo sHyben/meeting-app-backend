@@ -4,6 +4,7 @@ import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.rest.data.Statistics;
 import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
 import com.erstedigital.meetingappbackend.rest.service.StatisticsService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,7 +25,9 @@ public class StatisticsController {
 
     @GetMapping(value = "/organizer")
     public @ResponseBody
-    Statistics getOrganizerStatistics(@RequestParam Integer userId, @RequestParam Date start, @RequestParam Date end) throws NotFoundException {
+    Statistics getOrganizerStatistics(@RequestParam Integer userId,
+                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
+                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end) throws NotFoundException {
         return statisticsService.getOrganizerStatistics(userId, start, end);
     }
 
