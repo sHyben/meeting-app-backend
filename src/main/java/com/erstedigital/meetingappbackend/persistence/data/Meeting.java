@@ -68,6 +68,7 @@ public class Meeting {
             name = "meeting_activity",
             joinColumns = @JoinColumn(name = "meeting_id"),
             inverseJoinColumns = @JoinColumn(name = "activity_id"))
+    @ToString.Exclude
     private Set<Activity> activities;
 
     @OneToOne
