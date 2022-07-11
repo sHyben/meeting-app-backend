@@ -33,7 +33,9 @@ public class StatisticsController {
 
     @GetMapping(value = "/attendee")
     public @ResponseBody
-    Statistics getAttendeeStatistics(@RequestParam Integer userId, @RequestParam Date start, @RequestParam Date end) throws NotFoundException {
+    Statistics getAttendeeStatistics(@RequestParam Integer userId,
+                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
+                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end) throws NotFoundException {
         return statisticsService.getAttendeeStatistics(userId, start, end);
     }
 

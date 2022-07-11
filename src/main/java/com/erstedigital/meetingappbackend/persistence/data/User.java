@@ -27,8 +27,8 @@ public class User {
     @Column(name = "modified_at")
     private Date modifiedAt;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "position_id", nullable = true, columnDefinition="integer")
+    @ManyToOne
+    @JoinColumn(name = "position_id", columnDefinition="integer")
     private Position userPosition;
 
     @OneToMany(mappedBy = "attendanceUser")

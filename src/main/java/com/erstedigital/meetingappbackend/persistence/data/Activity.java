@@ -29,6 +29,7 @@ public class Activity {
     private String imgUrl;
 
     @ManyToMany(mappedBy = "activities")
+    @ToString.Exclude
     Set<Meeting> meetings;
 
     public Activity(ActivityRequest request) {
