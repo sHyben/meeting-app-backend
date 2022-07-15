@@ -13,4 +13,6 @@ public class AgendaMessage {
     private AgendaPointState state;
     private Date actualStart;
     private Date actualEnd;
+    private Date anticipatedStart;
+    private Date anticipatedEnd;
 }

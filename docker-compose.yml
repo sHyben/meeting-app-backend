@@ -21,7 +21,6 @@ services:
     ports:
       - "8082:80"
     restart: always
-
     depends_on:
       - db
     environment:
@@ -32,7 +31,7 @@ services:
   customerservice:
     image: erstedigitalinnovations/meeting-app-backend
     volumes:
-      - "./src:/src"
+      - "./src:/src:rw"
     container_name: meeting-app-backend
     build:
       context: .
@@ -40,7 +39,6 @@ services:
     ports:
       - "8080:8080"
     restart: always
-
     depends_on:
       - db
     environment:

@@ -29,11 +29,20 @@ public class AgendaPoint implements Comparable<AgendaPoint> {
     @Column(name = "actual_start")
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualStart;
+
+    @Column(name = "anticipated_start_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date anticipatedStart;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date end;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "actual_end")
     private Date actualEnd;
+
+    @Column(name = "anticipated_end_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date anticipatedEnd;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "agenda_id")
@@ -45,6 +54,8 @@ public class AgendaPoint implements Comparable<AgendaPoint> {
         this.description = request.getDescription();
         this.start = request.getStart();
         this.actualStart = request.getActualStart();
+        this.anticipatedStart = request.getStart();
+        this.anticipatedEnd = request.getEnd();
         this.end = request.getEnd();
         this.actualEnd = request.getActualEnd();
         this.status = request.getStatus();
