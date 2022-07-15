@@ -2,6 +2,8 @@ package com.erstedigital.meetingappbackend.persistence.data;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,7 +22,8 @@ public class Agenda {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToMany(mappedBy = "agenda", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "agenda", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<AgendaPoint> agendaPoints;
 

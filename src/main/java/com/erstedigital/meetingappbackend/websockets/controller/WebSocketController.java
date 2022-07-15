@@ -57,7 +57,7 @@ public class WebSocketController {
 
         messagingTemplate.convertAndSend(
                 "/meeting/messages/" + meetingId,
-                new MeetingOutputMessage(newMeeting.getId(), newMeeting.getActualStart(), newMeeting.getActualEnd())
+                new MeetingOutputMessage(newMeeting.getId(), newMeeting.getActualStart(), newMeeting.getActualEnd(), newMeeting.getAnticipatedEndTime())
         );
     }
 
@@ -83,7 +83,9 @@ public class WebSocketController {
                         agendaPoint.getId(),
                         AgendaPointState.valueOf(agendaPoint.getStatus()),
                         agendaPoint.getActualStart(),
-                        agendaPoint.getActualEnd()
+                        agendaPoint.getActualEnd(),
+                        agendaPoint.getAnticipatedStart(),
+                        agendaPoint.getAnticipatedEnd()
                 )
         );
     }

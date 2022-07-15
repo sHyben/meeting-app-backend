@@ -14,10 +14,15 @@ public class AgendaOutputMessage {
     private Date actualStart;
     private Date actualEnd;
 
-    public AgendaOutputMessage(Integer agendaPointId, AgendaPointState state, Date actualStart, Date actualEnd) {
+    private Date anticipatedStart;
+    private Date anticipatedEnd;
+
+    public AgendaOutputMessage(Integer agendaPointId, AgendaPointState state, Date actualStart, Date actualEnd, Date anticipatedStart, Date anticipatedEnd) {
         this.agendaPointId = agendaPointId;
         this.state = state;
         this.actualStart = actualStart;
         this.actualEnd = actualEnd;
+        this.anticipatedStart = anticipatedStart;
+        this.anticipatedEnd = anticipatedEnd;
     }
 }

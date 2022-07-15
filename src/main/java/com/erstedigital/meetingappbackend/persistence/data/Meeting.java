@@ -4,6 +4,8 @@ import com.erstedigital.meetingappbackend.framework.exception.NotFoundException;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -43,6 +45,10 @@ public class Meeting {
     @Column(name = "actual_end")
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualEnd;
+
+    @Column(name = "anticipated_end_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date anticipatedEndTime;
     @Column(name = "meeting_cost")
     private Integer meetingCost;
     @Column(name = "notes_url")
@@ -52,14 +58,16 @@ public class Meeting {
     @JoinColumn(name = "organizer_id")
     private User organizer;
 
-    @OneToMany(mappedBy="agendaMeeting")
+    @OneToMany(mappedBy="agendaMeeting", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<Agenda> agendas;
 
     @OneToMany(mappedBy="meeting")
     @ToString.Exclude
     private List<Note> notes;
-    @OneToMany(mappedBy = "attendanceMeeting")
+    @OneToMany(mappedBy = "attendanceMeeting", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<Attendance> attendances;
 
@@ -90,6 +98,7 @@ public class Meeting {
         this.actualStart = request.getActualStart();
         this.end = request.getEnd();
         this.actualEnd = request.getActualEnd();
+        this.anticipatedEndTime = request.getAnticipatedEnd();
         this.meetingCost = request.getMeetingCost();
         this.notesUrl = request.getNotesUrl();
         this.organizer = user;

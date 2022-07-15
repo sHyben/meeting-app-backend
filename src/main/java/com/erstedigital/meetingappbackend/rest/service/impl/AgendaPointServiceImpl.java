@@ -85,6 +85,12 @@ public class AgendaPointServiceImpl implements AgendaPointService {
         if(request.getActualEnd() != null) {
             agendaPoint.setActualEnd(request.getActualEnd());
         }
+        if(request.getAnticipatedEnd() != null) {
+            agendaPoint.setAnticipatedEnd(request.getAnticipatedEnd());
+        }
+        if(request.getAnticipatedStart() != null) {
+            agendaPoint.setAnticipatedStart(request.getAnticipatedStart());
+        }
         if(request.getStatus() != null) {
             agendaPoint.setStatus(request.getStatus());
         }
@@ -126,6 +132,13 @@ public class AgendaPointServiceImpl implements AgendaPointService {
 
         if (message.getActualEnd() != null) {
             agendaPoint.setActualEnd(message.getActualEnd());
+        }
+
+        if(message.getAnticipatedEnd() != null) {
+            agendaPoint.setAnticipatedEnd(message.getAnticipatedEnd());
+        }
+        if(message.getAnticipatedStart() != null) {
+            agendaPoint.setAnticipatedStart(message.getAnticipatedStart());
         }
 
         if (message.getState() == AgendaPointState.SKIPPED) {
