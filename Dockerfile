@@ -15,8 +15,10 @@ COPY ./pom.xml ./pom.xml
 
 RUN chmod 755 /app/mvnw
 
-RUN ./mvnw dependency:go-offline -B
+# speed up Maven JVM a bit
+ENV MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
 
-RUN ./mvnw package -DskipTests
+RUN ./mvnw clean install -Dmaven.test.skip=true
+
 RUN ls -al
-ENTRYPOINT ["java","-jar","target/meeting-app-backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,suspend=n", "-jar","target/meeting-app-backend-0.0.1-SNAPSHOT.jar"]

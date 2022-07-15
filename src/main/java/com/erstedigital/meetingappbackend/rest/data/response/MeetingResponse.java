@@ -24,6 +24,7 @@ public class MeetingResponse {
     private Date actualStart;
     private Date end;
     private Date actualEnd;
+    private Date anticipatedEnd;
     private Integer meetingCost;
     private String notesUrl;
     private Integer organizerId;
@@ -47,6 +48,7 @@ public class MeetingResponse {
         this.actualStart = meeting.getActualStart();
         this.end = meeting.getEnd();
         this.actualEnd = meeting.getActualEnd();
+        this.anticipatedEnd = meeting.getAnticipatedEndTime();
         this.meetingCost = meeting.getMeetingCost();
         this.notesUrl = meeting.getNotesUrl();
         this.organizerId = meeting.getOrganizer().getId();

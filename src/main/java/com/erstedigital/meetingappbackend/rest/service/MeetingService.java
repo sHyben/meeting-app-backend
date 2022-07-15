@@ -5,11 +5,11 @@ import com.erstedigital.meetingappbackend.persistence.data.Meeting;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import com.erstedigital.meetingappbackend.websockets.model.MeetingMessage;
 import com.erstedigital.meetingappbackend.rest.data.request.StatAttendanceRequest;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
 public interface MeetingService {
     List<Meeting> getAll();
 

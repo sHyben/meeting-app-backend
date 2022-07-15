@@ -17,6 +17,8 @@ public class AgendaPointRequest {
     private Date end;
     private Date actualStart;
     private Date actualEnd;
+    private Date anticipatedStart;
+    private Date anticipatedEnd;
     private String status;
     private Integer agendaId;
 }

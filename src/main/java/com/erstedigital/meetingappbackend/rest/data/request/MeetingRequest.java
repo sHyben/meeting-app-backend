@@ -21,6 +21,7 @@ public class MeetingRequest {
     private Date actualStart;
     private Date end;
     private Date actualEnd;
+    private Date anticipatedEnd;
     private Integer meetingCost;
     private String notesUrl;
     private Integer organizerId;

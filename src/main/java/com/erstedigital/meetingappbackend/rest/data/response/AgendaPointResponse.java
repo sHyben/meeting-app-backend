@@ -12,13 +12,12 @@ public class AgendaPointResponse {
     private Integer number;
     private String title;
     private String description;
-
     private Date start;
-
     private Date end;
-
     private Date actualStart;
+    private Date anticipatedStart;
     private Date actualEnd;
+    private Date anticipateEnd;
     private String status;
     private Integer agendaId;
 
@@ -31,6 +30,8 @@ public class AgendaPointResponse {
         this.end = agendaPoint.getEnd();
         this.actualStart = agendaPoint.getActualStart();
         this.actualEnd = agendaPoint.getActualEnd();
+        this.anticipatedStart = agendaPoint.getAnticipatedStart();
+        this.anticipateEnd = agendaPoint.getAnticipatedEnd();
         this.status = agendaPoint.getStatus();
         this.agendaId = agendaPoint.getAgenda().getId();
     }

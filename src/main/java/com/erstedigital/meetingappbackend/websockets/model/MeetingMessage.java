@@ -10,4 +10,5 @@ import java.sql.Date;
 public class MeetingMessage {
     private Date actualStart;
     private Date actualEnd;
+    private Date anticipatedEnd;
 }
