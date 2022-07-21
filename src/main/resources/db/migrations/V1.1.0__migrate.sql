@@ -11,7 +11,7 @@ CREATE SEQUENCE attendances_seq;
 CREATE TABLE IF NOT EXISTS attendances (
                                            id int CHECK (id > 0) NOT NULL DEFAULT NEXTVAL ('attendances_seq'),
                                            feedback_rating int DEFAULT NULL,
-                                           feedback_comment varchar(256) CHARACTER SET utf8 DEFAULT NULL,
+                                           feedback_comment varchar(256) DEFAULT NULL,
                                            participation smallint NOT NULL DEFAULT '0',
                                            meeting_id int CHECK (meeting_id > 0) NOT NULL,
                                            user_id int CHECK (user_id > 0) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS notes (
                                      id int CHECK (id > 0) NOT NULL DEFAULT NEXTVAL ('notes_seq'),
                                      meeting_id int CHECK (meeting_id > 0) NOT NULL,
                                      user_id int CHECK (user_id > 0) NOT NULL,
-                                     "text" TEXT CHARACTER SET utf8 NOT NULL,
+                                     "text" TEXT NOT NULL,
                                      primary key (id)
 )  ;
 
@@ -43,16 +43,18 @@ CREATE TABLE IF NOT EXISTS meeting_activity (
                                                 primary key (id)
 )  ;
 
-ALTER TABLE notes
-    ADD CREATE INDEX notes_ibfk_1 ON notes (meeting_id),
+CREATE INDEX notes_ibfk_1 ON notes (meeting_id);
+
+ALTER TABLE notes CREATE INDEX notes_ibfk_1 ON notes (meeting_id),
     ADD KEY "notes_ibfk_2" (user_id);
 
+CREATE INDEX meeting_activity_ibfk_1 ON meeting_activity (meeting_id);
+
 ALTER TABLE meeting_activity
-    ADD CREATE INDEX meeting_activity_ibfk_1 ON meeting_activity (meeting_id),
     ADD KEY "meeting_activity_ibfk_2" (activity_id);
 
 ALTER TABLE agenda_points
-    MODIFY COLUMN description TEXT;
+    ALTER COLUMN description TYPE TEXT;
 
 ALTER TABLE attendances
     ADD CONSTRAINT attendances_ibfk_1 FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -80,12 +82,12 @@ ALTER TABLE agenda_points
     ADD COLUMN actual_end timestamp DEFAULT NULL;
 
 ALTER TABLE meetings
-    ADD COLUMN running_activity_id cast(10 as int) UNSIGNED DEFAULT NULL,
+    ADD COLUMN running_activity_id INTEGER DEFAULT NULL,
     ADD KEY "meeting_runact_ibfk_1" (running_activity_id),
     ADD CONSTRAINT meeting_runact_ibfk_1 FOREIGN KEY (running_activity_id) REFERENCES "activities" (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    ALTER COLUMN start timestamp,
-    ALTER COLUMN end timestamp,
-    ALTER COLUMN actual_start timestamp,
-    ALTER COLUMN actual_end timestamp;
+    ALTER COLUMN start TYPE timestamp,
+    ALTER COLUMN end TYPE timestamp,
+    ALTER COLUMN actual_start TYPE timestamp,
+    ALTER COLUMN actual_end TYPE timestamp;
 
 COMMIT;

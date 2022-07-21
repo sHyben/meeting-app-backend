@@ -2,10 +2,9 @@
 START TRANSACTION;
 SET timezone TO "+02:00";
 
-CREATE TYPE status AS ENUM ('PENDING','ONGOING', 'DONE', 'SKIPPED');
+CREATE TYPE status_type AS ENUM ('PENDING','ONGOING', 'DONE', 'SKIPPED');
 
-ALTER TABLE agenda_points
-    MODIFY COLUMN status status COLLATE utf8_slovak_ci NOT NULL DEFAULT 'PENDING';
+ALTER TABLE agenda_points ALTER COLUMN "status" status_type COLLATE utf8_slovak_ci NOT NULL DEFAULT 'PENDING';
 
 
 COMMIT;
