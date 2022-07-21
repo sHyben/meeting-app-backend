@@ -90,6 +90,11 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    public Attendance update(Attendance newAttendance){
+        return attendanceRepository.save(newAttendance);
+    }
+
+    @Override
     public void delete(Integer id) throws NotFoundException {
         attendanceRepository.delete(findById(id));
     }

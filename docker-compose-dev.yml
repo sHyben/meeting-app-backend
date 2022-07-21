@@ -4,13 +4,14 @@ services:
   #service 1: definition of mysql database
   db:
     platform: linux/x86_64
-    image: mysql:latest
+    image: postgres:14.4
     container_name: meetingapp-db
     environment:
-      - MYSQL_ROOT_PASSWORD=spring
-      - MYSQL_DATABASE=meetingapp-db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=spring
+      - POSTGRES_DB=meetingapp-db
     ports:
-      - "3306:3306"
+      - "3306:5432"
     restart: always
 
   #service 2: definition of phpMyAdmin
@@ -44,6 +45,6 @@ services:
       - db
     environment:
       #SPRING_JPA_HIBERNATE_DLL-AUTO: create-drop
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/meetingapp-db?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/meetingapp-db?allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: spring

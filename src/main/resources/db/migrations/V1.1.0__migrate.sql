@@ -1,80 +1,89 @@
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+/* SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO"; */
 START TRANSACTION;
-SET time_zone = "+02:00";
+time_zone := "+02:00";
 -- My Changes
-DROP TABLE IF EXISTS `attendees`;
+DROP TABLE IF EXISTS attendees;
 
-CREATE TABLE IF NOT EXISTS `attendances` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `feedback_rating` int DEFAULT NULL,
-  `feedback_comment` varchar(256) CHARACTER SET utf8 COLLATE utf8_slovak_ci DEFAULT NULL,
-  `participation` tinyint(1) NOT NULL DEFAULT '0',
-  `meeting_id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `last_joined_at` datetime DEFAULT NULL,
-  `presence_time` int DEFAULT '0',
-  primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
+-- SQLINES LICENSE FOR EVALUATION USE ONLY
+CREATE SEQUENCE attendances_seq;
+
+CREATE TABLE IF NOT EXISTS attendances (
+                                           id int CHECK (id > 0) NOT NULL DEFAULT NEXTVAL ('attendances_seq'),
+                                           feedback_rating int DEFAULT NULL,
+                                           feedback_comment varchar(256) CHARACTER SET utf8 DEFAULT NULL,
+                                           participation smallint NOT NULL DEFAULT '0',
+                                           meeting_id int CHECK (meeting_id > 0) NOT NULL,
+                                           user_id int CHECK (user_id > 0) NOT NULL,
+                                           last_joined_at timestamp(0) DEFAULT NULL,
+                                           presence_time int DEFAULT '0',
+                                           primary key (id)
+)  ;
 
 --
-CREATE TABLE IF NOT EXISTS `notes` (
-    `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `meeting_id` int(10) UNSIGNED NOT NULL,
-    `user_id` int(10) UNSIGNED NOT NULL,
-    `text` TEXT CHARACTER SET utf8 COLLATE utf8_slovak_ci NOT NULL,
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
+-- SQLINES LICENSE FOR EVALUATION USE ONLY
+CREATE SEQUENCE notes_seq;
+
+CREATE TABLE IF NOT EXISTS notes (
+                                     id int CHECK (id > 0) NOT NULL DEFAULT NEXTVAL ('notes_seq'),
+                                     meeting_id int CHECK (meeting_id > 0) NOT NULL,
+                                     user_id int CHECK (user_id > 0) NOT NULL,
+                                     text TEXT CHARACTER SET utf8 NOT NULL,
+                                     primary key (id)
+)  ;
 
 
-CREATE TABLE IF NOT EXISTS `meeting_activity` (
-    `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `meeting_id` int(10) UNSIGNED NOT NULL,
-    `activity_id` int(10) UNSIGNED NOT NULL,
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
+-- SQLINES LICENSE FOR EVALUATION USE ONLY
+CREATE SEQUENCE meeting_activity_seq;
 
-ALTER TABLE `notes`
-    ADD KEY `notes_ibfk_1` (`meeting_id`),
-    ADD KEY `notes_ibfk_2` (`user_id`);
+CREATE TABLE IF NOT EXISTS meeting_activity (
+                                                id int CHECK (id > 0) NOT NULL DEFAULT NEXTVAL ('meeting_activity_seq'),
+                                                meeting_id int CHECK (meeting_id > 0) NOT NULL,
+                                                activity_id int CHECK (activity_id > 0) NOT NULL,
+                                                primary key (id)
+)  ;
 
-ALTER TABLE `meeting_activity`
-    ADD KEY `meeting_activity_ibfk_1` (`meeting_id`),
-    ADD KEY `meeting_activity_ibfk_2` (`activity_id`);
+ALTER TABLE notes
+    ADD CREATE INDEX notes_ibfk_1 ON notes (meeting_id),
+    ADD KEY `notes_ibfk_2` (user_id);
 
-ALTER TABLE `agenda_points`
-    MODIFY COLUMN `description` TEXT;
+ALTER TABLE meeting_activity
+    ADD CREATE INDEX meeting_activity_ibfk_1 ON meeting_activity (meeting_id),
+    ADD KEY `meeting_activity_ibfk_2` (activity_id);
 
-ALTER TABLE `attendances`
-  ADD CONSTRAINT `attendances_ibfk_1` FOREIGN KEY (`meeting_id`) REFERENCES `meetings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `attendances_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-  
-ALTER TABLE `notes`
-    ADD CONSTRAINT `notes_ibfk_1` FOREIGN KEY (`meeting_id`) REFERENCES `meetings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `notes_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE agenda_points
+    MODIFY COLUMN description TEXT;
 
-ALTER TABLE `meeting_activity`
-    ADD CONSTRAINT `meeting_activity_ibfk_1` FOREIGN KEY (`meeting_id`) REFERENCES `meetings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `meeting_activity_ibfk_2` FOREIGN KEY (`activity_id`) REFERENCES `activities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE attendances
+    ADD CONSTRAINT attendances_ibfk_1 FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT attendances_ibfk_2 FOREIGN KEY (user_id) REFERENCES `users` (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `meetings`
-    ADD COLUMN `apollo_code` VARCHAR(256) DEFAULT NULL,
-    ADD COLUMN `feedback_type` enum('none','general','specific') COLLATE utf8_slovak_ci NOT NULL;
+ALTER TABLE notes
+    ADD CONSTRAINT notes_ibfk_1 FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT notes_ibfk_2 FOREIGN KEY (user_id) REFERENCES `users` (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `agenda_points`
-    DROP COLUMN `duration`,
-    ADD COLUMN `start` datetime DEFAULT NULL,
-    ADD COLUMN `actual_start` datetime DEFAULT NULL,
-    ADD COLUMN `end` datetime DEFAULT NULL,
-    ADD COLUMN `actual_end` datetime DEFAULT NULL;
+ALTER TABLE meeting_activity
+    ADD CONSTRAINT meeting_activity_ibfk_1 FOREIGN KEY (meeting_id) REFERENCES meetings (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT meeting_activity_ibfk_2 FOREIGN KEY (activity_id) REFERENCES `activities` (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `meetings`
-    ADD COLUMN `running_activity_id` int(10) UNSIGNED DEFAULT NULL,
-    ADD KEY `meeting_runact_ibfk_1` (`running_activity_id`),
-    ADD CONSTRAINT `meeting_runact_ibfk_1` FOREIGN KEY (`running_activity_id`) REFERENCES `activities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    MODIFY `start` datetime,
-    MODIFY `end` datetime,
-    MODIFY `actual_start` datetime,
-    MODIFY `actual_end` datetime;
+ALTER TABLE meetings
+    ADD COLUMN apollo_code VARCHAR(256) DEFAULT NULL,
+    ADD COLUMN feedback_type enum('none','general','specific') COLLATE utf8_slovak_ci NOT NULL;
 
-    COMMIT;
+ALTER TABLE agenda_points
+    DROP COLUMN duration,
+    ADD COLUMN start datetime DEFAULT NULL,
+    ADD COLUMN actual_start datetime DEFAULT NULL,
+    ADD COLUMN end datetime DEFAULT NULL,
+    ADD COLUMN actual_end datetime DEFAULT NULL;
+
+ALTER TABLE meetings
+    ADD COLUMN running_activity_id cast(10 as int) UNSIGNED DEFAULT NULL,
+    ADD KEY `meeting_runact_ibfk_1` (running_activity_id),
+    ADD CONSTRAINT meeting_runact_ibfk_1 FOREIGN KEY (running_activity_id) REFERENCES `activities` (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    MODIFY start datetime,
+    MODIFY end datetime,
+    MODIFY actual_start datetime,
+    MODIFY actual_end datetime;
+
+COMMIT;

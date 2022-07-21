@@ -37,7 +37,8 @@ public class MeetingServiceImpl implements MeetingService {
     private final ScheduledExecutorService scheduledExecutorService;
 
     public MeetingServiceImpl(MeetingRepository meetingRepository, ActivityService activityService,
-                              UserService userService, @Lazy AttendanceService attendanceService, AgendaPointRepository agendaPointRepository) {
+                              UserService userService, @Lazy AttendanceService attendanceService,
+                              AgendaPointRepository agendaPointRepository) {
         this.meetingRepository = meetingRepository;
         this.activityService = activityService;
         this.userService = userService;
@@ -151,7 +152,7 @@ public class MeetingServiceImpl implements MeetingService {
         }
         if(request.getActualStart() != null) {
             meeting.setActualStart(request.getActualStart());
-            scheduleMeetingCheck(id);
+            scheduleEmptyMeetingCheck(id);
         }
         if(request.getEnd() != null) {
             meeting.setEnd(request.getEnd());
@@ -198,13 +199,14 @@ public class MeetingServiceImpl implements MeetingService {
          Meeting meeting = findById(id);
          if(request.getActualStart() != null) {
              meeting.setActualStart(request.getActualStart());
-             scheduleMeetingCheck(id);
+             scheduleEmptyMeetingCheck(id);
          }
          if(request.getActualEnd() != null) {
              meeting.setActualEnd(request.getActualEnd());
          }
          if(request.getAnticipatedEnd() != null) {
              meeting.setAnticipatedEndTime(request.getAnticipatedEnd());
+             scheduleMeetingEndCheck(id, request.getAnticipatedEnd());
          }
          return meetingRepository.save(meeting);
     }
@@ -237,18 +239,14 @@ public class MeetingServiceImpl implements MeetingService {
         return meetingRepository.getAttendeeMeetings(start, end, userId);
     }
 
-    private void scheduleMeetingCheck(Integer meetingId) {
+    private void scheduleEmptyMeetingCheck(Integer meetingId) {
         scheduledExecutorService.schedule(() -> {
             Optional<Meeting> meeting = meetingRepository.findById(meetingId);
             if (meeting.isPresent()) {
-                System.out.println("DOING CHECK");
-                System.out.println(meeting.get().getMeetingType());
-                System.out.println(meeting.get().getAttendances().size());
 
                 boolean areAttendeesPresent = false;
 
                 for (Attendance attendance: meeting.get().getAttendances()) {
-                    System.out.println(attendance.getAttendanceUser().getEmail());
                     if (attendance.getPresenceTime() != null && attendance.getPresenceTime() > 0) {
                         areAttendeesPresent = true;
                     }
@@ -273,6 +271,45 @@ public class MeetingServiceImpl implements MeetingService {
                 }
             }
         }, 20, TimeUnit.MINUTES);
+    }
+
+    private void scheduleMeetingEndCheck(Integer meetingId, Date oldAnticipatedEnd) {
+        // schedule 10 minutes after expected end time
+        long scheduledTime = oldAnticipatedEnd.getTime() + 1000 * 60 * 10;
+
+        scheduledExecutorService.schedule(() -> {
+            Optional<Meeting> meeting = meetingRepository.findById(meetingId);
+            if (meeting.isPresent()) {
+                Meeting newMeeting = meeting.get();
+
+                // in case meeting has not been prolonged, end it
+                if (newMeeting.getAnticipatedEndTime().equals(oldAnticipatedEnd)) {
+                    newMeeting.setActualEnd(new Date());
+
+                    // end attendances
+                    newMeeting.setAttendances(newMeeting.getAttendances().stream().map(attendance -> {
+                        attendance.setParticipation(false);
+                        attendance.setPresenceTime((int) (attendance.getPresenceTime() + (new Date().getTime() - attendance.getLastJoinedAt().getTime()) / 1000));
+                        return attendanceService.update(attendance);
+                    }).collect(Collectors.toList()));
+
+                    // mark ongoing meeting points as done
+                    newMeeting.getAgendas().forEach(agenda -> {
+                        agenda.getAgendaPoints().forEach(agendaPoint -> {
+                            if (agendaPoint.getActualEnd() == null) {
+                                agendaPoint.setActualEnd(new Date());
+                            }
+                            if (Objects.equals(agendaPoint.getStatus(), AgendaPointState.ONGOING.toString())) {
+                                agendaPoint.setStatus(AgendaPointState.DONE.toString());
+                            }
+                            agendaPointRepository.save(agendaPoint);
+                        });
+                    });
+
+                    meetingRepository.save(newMeeting);
+                }
+            }
+        }, new Date().getTime() - scheduledTime, TimeUnit.MILLISECONDS);
     }
 
     private Meeting startMeeting(Meeting meeting) {
