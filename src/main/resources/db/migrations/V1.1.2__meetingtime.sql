@@ -1,6 +1,6 @@
 /* SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO"; */
 START TRANSACTION;
-time_zone := "+02:00";
+SET timezone TO "+02:00";
 
 ALTER TABLE meetings
     ADD COLUMN anticipated_end_time datetime DEFAULT NULL;

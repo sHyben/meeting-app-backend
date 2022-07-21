@@ -1,9 +1,11 @@
 /* SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO"; */
 START TRANSACTION;
-time_zone := "+02:00";
+SET timezone TO "+02:00";
+
+CREATE TYPE status AS ENUM ('PENDING','ONGOING', 'DONE', 'SKIPPED');
 
 ALTER TABLE agenda_points
-    MODIFY COLUMN status enum('PENDING','ONGOING', 'DONE', 'SKIPPED') COLLATE utf8_slovak_ci NOT NULL DEFAULT 'PENDING';
+    MODIFY COLUMN status status COLLATE utf8_slovak_ci NOT NULL DEFAULT 'PENDING';
 
 
 COMMIT;

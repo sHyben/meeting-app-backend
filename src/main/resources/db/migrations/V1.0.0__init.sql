@@ -9,7 +9,7 @@
 
 /* SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO"; */
 START TRANSACTION;
-time_zone := "+02:00";
+SET timezone TO "+02:00";
 
 
 /* SQLINES DEMO *** ARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -30,7 +30,7 @@ time_zone := "+02:00";
 -- SQLINES LICENSE FOR EVALUATION USE ONLY
 CREATE TABLE IF NOT EXISTS activities (
                                           id int CHECK (id > 0) NOT NULL,
-    type varchar(64) NOT NULL,
+    "type" varchar(64) NOT NULL,
     title varchar(64) NOT NULL,
     text varchar(256) NOT NULL,
     answer varchar(256) NOT NULL,
@@ -49,9 +49,9 @@ CREATE TABLE IF NOT EXISTS activities (
 
 -- SQLINES LICENSE FOR EVALUATION USE ONLY
 CREATE TABLE IF NOT EXISTS agendas (
-                                       id int CHECK (id > 0) NOT NULL,
+    id int CHECK (id > 0) NOT NULL,
     meeting_id int CHECK (meeting_id > 0) NOT NULL
-    )  ;
+);
 
 --
 -- SQLINES DEMO *** table `agendas`
@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS agendas (
 
 -- SQLINES LICENSE FOR EVALUATION USE ONLY
 CREATE TABLE IF NOT EXISTS agenda_points (
-                                             id int CHECK (id > 0) NOT NULL,
-    number int CHECK (number > 0) NOT NULL,
+    id int CHECK (id > 0) NOT NULL,
+    "number" int CHECK (number > 0) NOT NULL,
     title varchar(64) NOT NULL,
     description varchar(256) NOT NULL,
     duration time(0) NOT NULL,
@@ -83,15 +83,16 @@ CREATE TABLE IF NOT EXISTS agenda_points (
 --
 -- SQLINES DEMO *** or table `attendees`
 --
+CREATE TYPE participation AS ENUM ('yes', 'no');
 
 -- SQLINES LICENSE FOR EVALUATION USE ONLY
 CREATE TABLE IF NOT EXISTS attendees (
-                                         id int CHECK (id > 0) NOT NULL,
+    id int CHECK (id > 0) NOT NULL,
     email varchar(64) NOT NULL,
     meeting_id int CHECK (meeting_id > 0) NOT NULL,
     feedback_rating int CHECK (feedback_rating > 0) NOT NULL DEFAULT 0,
     feedback_comment varchar(256) NOT NULL DEFAULT '""',
-    participation enum('yes','no') NOT NULL DEFAULT 'no',
+    participation participation NOT NULL DEFAULT 'no',
     position_id int CHECK (position_id > 0) DEFAULT NULL
     )  ;
 
@@ -105,6 +106,8 @@ CREATE TABLE IF NOT EXISTS attendees (
 -- SQLINES DEMO *** or table `meetings`
 --
 
+CREATE TYPE meeting_type AS ENUM ('project_status','brainstorming','team_status','social','one_to_one');
+
 -- SQLINES LICENSE FOR EVALUATION USE ONLY
 CREATE TABLE IF NOT EXISTS meetings (
                                         id int CHECK (id > 0) NOT NULL,
@@ -112,11 +115,11 @@ CREATE TABLE IF NOT EXISTS meetings (
     subject varchar(128) NOT NULL,
     description varchar(256) DEFAULT NULL,
     organizer_id int CHECK (organizer_id > 0) NOT NULL,
-    meeting_type enum('project_status','brainstorming','team_status','social','one_to_one') NOT NULL,
-    start date NOT NULL,
-    actual_start date DEFAULT NULL,
-    end date DEFAULT NULL,
-    actual_end date DEFAULT NULL,
+    meeting_type meeting_type NOT NULL,
+    "start" timestamp NOT NULL,
+    actual_start timestamp DEFAULT NULL,
+    "end" timestamp DEFAULT NULL,
+    actual_end timestamp DEFAULT NULL,
     meeting_cost cast(11 as int) DEFAULT NULL,
     url varchar(256) COLLATE utf8_slovak_ci DEFAULT NULL,
     notes_url varchar(256) COLLATE utf8_slovak_ci NOT NULL DEFAULT '',
@@ -138,8 +141,8 @@ CREATE TABLE IF NOT EXISTS meetings (
 
 -- SQLINES LICENSE FOR EVALUATION USE ONLY
 CREATE TABLE IF NOT EXISTS positions (
-                                         id int CHECK (id > 0) NOT NULL,
-    name varchar(64) NOT NULL,
+    id int CHECK (id > 0) NOT NULL,
+    "name" varchar(64) NOT NULL,
     hourly_cost int CHECK (hourly_cost > 0) NOT NULL
     )  ;
 
@@ -156,7 +159,7 @@ CREATE TABLE IF NOT EXISTS positions (
 -- SQLINES LICENSE FOR EVALUATION USE ONLY
 CREATE TABLE IF NOT EXISTS users (
                                      id int CHECK (id > 0) NOT NULL,
-    name varchar(64) NOT NULL,
+    "name" varchar(64) NOT NULL,
     email varchar(64) NOT NULL,
     modified_at timestamp(0) NOT NULL DEFAULT current_timestamp() (),
     position_id cast(10 as int) UNSIGNED DEFAULT NULL
