@@ -68,6 +68,8 @@ public class MeetingResponse {
         }
 
         this.apolloCode = meeting.getApolloCode();
-        this.totalParticipationTime = meeting.getAttendances().stream().mapToInt(Attendance::getPresenceTime).sum();
+        if(meeting.getAttendances() != null) {
+            this.totalParticipationTime = meeting.getAttendances().stream().map(Attendance::getPresenceTime).mapToInt(val -> val == null ? 0 : val).sum();
+        }
     }
 }
