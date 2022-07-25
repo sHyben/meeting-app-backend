@@ -36,6 +36,7 @@ public class MeetingResponse {
     private Double longitude;
     private String url;
     private Integer runningActivity;
+    private Integer totalParticipationTime;
 
     public MeetingResponse(Meeting meeting) {
         this.id = meeting.getId();
@@ -67,5 +68,6 @@ public class MeetingResponse {
         }
 
         this.apolloCode = meeting.getApolloCode();
+        this.totalParticipationTime = meeting.getAttendances().stream().mapToInt(Attendance::getPresenceTime).sum();
     }
 }
