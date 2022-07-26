@@ -9,9 +9,9 @@ ALTER TABLE agenda_points
     ALTER COLUMN "status" TYPE status_type USING
         CASE "status"
             WHEN 0 THEN 'PENDING'
-            WHEN 0 THEN 'ONGOING'
-            WHEN 0 THEN 'DONE'
-            WHEN 0 THEN 'SKIPPED'
+            WHEN 1 THEN 'ONGOING'
+            WHEN 2 THEN 'DONE'
+            WHEN 3 THEN 'SKIPPED'
         END :: status_type,
     ALTER COLUMN "status" SET DEFAULT 'PENDING';
 
