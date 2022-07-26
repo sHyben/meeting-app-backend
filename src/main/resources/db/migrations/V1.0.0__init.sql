@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT users_ibfk_1
         FOREIGN KEY(position_id)
             REFERENCES positions(id)
+                ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TYPE meeting_type AS ENUM ('project_status','brainstorming','team_status','social','one_to_one');
@@ -51,18 +52,21 @@ CREATE TABLE IF NOT EXISTS meetings (
     activity_id INTEGER DEFAULT NULL,
     CONSTRAINT meetings_ibfk_1
         FOREIGN KEY(organizer_id)
-            REFERENCES users(id),
+            REFERENCES users(id)
+                ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT meetings_ibfk_2
         FOREIGN KEY(activity_id)
             REFERENCES activities(id)
+                ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS agendas (
     id SERIAL PRIMARY KEY,
     meeting_id int CHECK (meeting_id > 0) NOT NULL,
     CONSTRAINT agendas_ibfk_1
-    FOREIGN KEY(meeting_id)
-    REFERENCES meetings(id)
+        FOREIGN KEY(meeting_id)
+            REFERENCES meetings(id)
+                ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS attendees (
@@ -75,15 +79,17 @@ CREATE TABLE IF NOT EXISTS attendees (
     position_id int CHECK (position_id > 0) DEFAULT NULL,
     CONSTRAINT attendees_ibfk_1
         FOREIGN KEY(meeting_id)
-            REFERENCES meetings(id),
+            REFERENCES meetings(id)
+                ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT attendees_ibfk_2
         FOREIGN KEY(position_id)
             REFERENCES positions(id)
+                ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS agenda_points (
     id SERIAL PRIMARY KEY,
-    "number" int CHECK (number > 0) NOT NULL,
+    "number" int CHECK (number > -1) NOT NULL,
     title varchar(64) NOT NULL,
     description varchar(256) NOT NULL,
     duration time(0) NOT NULL,
@@ -92,4 +98,5 @@ CREATE TABLE IF NOT EXISTS agenda_points (
     CONSTRAINT agenda_points_ibfk_1
         FOREIGN KEY(agenda_id)
             REFERENCES agendas(id)
+                ON DELETE CASCADE ON UPDATE CASCADE
 );

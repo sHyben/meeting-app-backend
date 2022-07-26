@@ -40,6 +40,7 @@ public class Meeting {
     @Column(name = "actual_start")
     @Temporal(TemporalType.TIMESTAMP)
     private Date actualStart;
+    @Column(name = "\"end\"")
     @Temporal(TemporalType.TIMESTAMP)
     private Date end;
     @Column(name = "actual_end")

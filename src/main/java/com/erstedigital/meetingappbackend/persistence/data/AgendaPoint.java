@@ -34,6 +34,7 @@ public class AgendaPoint implements Comparable<AgendaPoint> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date anticipatedStart;
 
+    @Column(name = "\"end\"")
     @Temporal(TemporalType.TIMESTAMP)
     private Date end;
     @Temporal(TemporalType.TIMESTAMP)
