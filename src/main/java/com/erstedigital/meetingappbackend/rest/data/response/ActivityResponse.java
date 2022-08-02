@@ -26,6 +26,6 @@ public class ActivityResponse {
         this.text = activity.getText();
         this.answer = activity.getAnswer();
         this.imgUrl = activity.getImgUrl();
-        this.meetings = activity.getMeetings().stream().map(Meeting::getId).collect(Collectors.toList());;
+        this.meetings = activity.getMeetings().stream().map(Meeting::getId).collect(Collectors.toList());
     }
 }

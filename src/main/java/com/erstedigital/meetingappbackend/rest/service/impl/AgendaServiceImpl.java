@@ -52,6 +52,6 @@ public class AgendaServiceImpl implements AgendaService {
 
     @Override
     public void delete(Integer id) throws NotFoundException {
-        agendaRepository.save(findById(id));
+        agendaRepository.delete(findById(id));
     }
 }

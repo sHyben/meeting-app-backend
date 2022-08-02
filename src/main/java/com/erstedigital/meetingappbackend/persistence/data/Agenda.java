@@ -22,7 +22,7 @@ public class Agenda {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToMany(mappedBy = "agenda", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "agenda", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @Fetch(value = FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<AgendaPoint> agendaPoints;

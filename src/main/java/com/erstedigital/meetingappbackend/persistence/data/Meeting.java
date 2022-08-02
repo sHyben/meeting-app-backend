@@ -58,7 +58,7 @@ public class Meeting {
     @JoinColumn(name = "organizer_id")
     private User organizer;
 
-    @OneToMany(mappedBy="agendaMeeting", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="agendaMeeting", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @Fetch(value = FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<Agenda> agendas;
@@ -66,7 +66,7 @@ public class Meeting {
     @OneToMany(mappedBy="meeting")
     @ToString.Exclude
     private List<Note> notes;
-    @OneToMany(mappedBy = "attendanceMeeting", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "attendanceMeeting", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @Fetch(value = FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<Attendance> attendances;

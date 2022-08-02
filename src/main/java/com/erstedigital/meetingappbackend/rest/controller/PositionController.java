@@ -45,8 +45,8 @@ public class PositionController {
         return new PositionResponse(positionService.update(id, body));
     }
 
-    @DeleteMapping(path="/delete")
-    public @ResponseBody void deletePosition(@RequestParam Integer id) throws NotFoundException {
+    @DeleteMapping(path="/{id}")
+    public @ResponseBody void deletePosition(@PathVariable("id") Integer id) throws NotFoundException {
         positionService.delete(id);
     }
 }
