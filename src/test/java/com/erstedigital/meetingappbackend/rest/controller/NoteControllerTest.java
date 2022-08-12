@@ -7,8 +7,8 @@ import com.erstedigital.meetingappbackend.rest.data.request.UserRequest;
 import com.erstedigital.meetingappbackend.rest.service.NoteService;
 import com.erstedigital.meetingappbackend.websockets.model.NoteMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.HashSet;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class NoteControllerTest {
     @Autowired
     NoteService noteService;
@@ -38,29 +40,44 @@ class NoteControllerTest {
     private MockMvc mockMvc;
 
     private NoteMessage message;
+    private static Integer meetingId;
+    private static Integer userId;
 
     @BeforeEach
     public void setUpMeeting() throws Exception {
         PositionRequest positionRequest = new PositionRequest();
-        mockMvc.perform(post("/position")
+        MvcResult result1 = mockMvc.perform(post("/position")
                 .content(mapper.writeValueAsString(positionRequest))
-                .contentType(MediaType.APPLICATION_JSON));
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+        String response1 = result1.getResponse().getContentAsString();
+        Integer positionId = JsonPath.parse(response1).read("id");
 
         UserRequest userRequest = new UserRequest();
-        userRequest.setPositionId(1);
+        userRequest.setPositionId(positionId);
         userRequest.setEmail("test@test.com");
 
-        mockMvc.perform(post("/user")
+        MvcResult result2 = mockMvc.perform(post("/user")
                 .content(mapper.writeValueAsString(userRequest))
-                .contentType(MediaType.APPLICATION_JSON));
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+        String response2 = result2.getResponse().getContentAsString();
+        userId = JsonPath.parse(response2).read("id");
 
         MeetingRequest meetingRequest = new MeetingRequest();
-        meetingRequest.setOrganizerId(1);
+        meetingRequest.setOrganizerId(userId);
         meetingRequest.setActivities(new HashSet<>());
         meetingRequest.setAttendees(new HashSet<>());
-        mockMvc.perform(post("/meetings")
+        MvcResult result = mockMvc.perform(post("/meetings")
                 .content(mapper.writeValueAsString(meetingRequest))
-                .contentType(MediaType.APPLICATION_JSON));
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String response = result.getResponse().getContentAsString();
+        meetingId = JsonPath.parse(response).read("id");
     }
 
     @BeforeEach
@@ -71,11 +88,12 @@ class NoteControllerTest {
     }
 
     @Test
+    @Order(1)
     void getNotesByMeetingId() throws Exception {
-        noteService.createNote(message, 1);
+        noteService.createNote(message, meetingId);
         mockMvc.perform(get("/note")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("meetingId", "1"))
+                        .param("meetingId", meetingId.toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*").exists())

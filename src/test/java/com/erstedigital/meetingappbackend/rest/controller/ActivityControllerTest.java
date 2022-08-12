@@ -3,8 +3,8 @@ package com.erstedigital.meetingappbackend.rest.controller;
 import com.erstedigital.meetingappbackend.rest.data.request.ActivityRequest;
 import com.erstedigital.meetingappbackend.rest.service.ActivityService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,9 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -23,8 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ActivityControllerTest {
-
     @Autowired
     ActivityService activityService;
 
@@ -33,10 +32,11 @@ class ActivityControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private ActivityRequest request;
+    private static ActivityRequest request;
+    private static Integer currentId;
 
-    @BeforeEach
-    public void setUpRequest() {
+    @BeforeAll
+    public static void setUpRequest() {
         request = new ActivityRequest();
         request.setType("Test Type");
         request.setTitle("Test title");
@@ -46,35 +46,32 @@ class ActivityControllerTest {
     }
 
     @Test
-    void getAllActivities() throws Exception {
-        mockMvc.perform(post("/activity")
-                .content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON));
-        mockMvc.perform(post("/activity")
-                .content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON));
+    @Order(1)
+    void addNewActivity() throws Exception {
+        MvcResult result = mockMvc.perform(post("/activity")
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.type").value(request.getType()))
+                .andExpect(jsonPath("$.title").value(request.getTitle()))
+                .andExpect(jsonPath("$.text").value(request.getText()))
+                .andExpect(jsonPath("$.answer").value(request.getAnswer()))
+                .andExpect(jsonPath("$.imgUrl").value(request.getImgUrl()))
+                .andReturn();
 
-        mockMvc.perform(get("/activity")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[*].id").isNotEmpty());
+        String response = result.getResponse().getContentAsString();
+        //Integer id = JsonPath.parse(response).read("$[0].id");
+        currentId = JsonPath.parse(response).read("id");
     }
 
     @Test
+    @Order(2)
     public void getActivityById() throws Exception {
-
-        mockMvc.perform(post("/activity")
-                .content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON));
-
-        mockMvc.perform( MockMvcRequestBuilders
-                        .get("/activity/{id}", 1)
+        mockMvc.perform(get("/activity/{id}", currentId)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(currentId))
                 .andExpect(jsonPath("$.type").value(request.getType()))
                 .andExpect(jsonPath("$.title").value(request.getTitle()))
                 .andExpect(jsonPath("$.text").value(request.getText()))
@@ -83,6 +80,7 @@ class ActivityControllerTest {
     }
 
     @Test
+    @Order(3)
     void getActivityById_WrongId() throws Exception {
         mockMvc.perform(get("/activity/{id}", Integer.MAX_VALUE)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -91,29 +89,23 @@ class ActivityControllerTest {
     }
 
     @Test
-    void addNewActivity() throws Exception {
-        mockMvc.perform(post("/activity")
-                .content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.type").value(request.getType()))
-                .andExpect(jsonPath("$.title").value(request.getTitle()))
-                .andExpect(jsonPath("$.text").value(request.getText()))
-                .andExpect(jsonPath("$.answer").value(request.getAnswer()))
-                .andExpect(jsonPath("$.imgUrl").value(request.getImgUrl()));
+    @Order(4)
+    void getAllActivities() throws Exception {
+        mockMvc.perform(get("/activity")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[*].id").isNotEmpty());
     }
 
     @Test
+    @Order(5)
     void updateActivity() throws Exception {
         ActivityRequest newRequest = new ActivityRequest();
         newRequest.setText("New text");
 
-        mockMvc.perform(post("/activity")
-                .content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                        .andDo(print());
-
-        mockMvc.perform(put("/activity/{id}", 1)
+        mockMvc.perform(put("/activity/{id}", currentId)
                 .content(mapper.writeValueAsString(newRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -125,21 +117,22 @@ class ActivityControllerTest {
     }
 
     @Test
+    @Order(6)
     void deleteActivity() throws Exception {
-        mockMvc.perform(delete("/activity/{id}", 1)
+        mockMvc.perform(delete("/activity/{id}", currentId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform( MockMvcRequestBuilders
-                        .get("/activity/{id}", 1)
+        mockMvc.perform(get("/activity/{id}", currentId)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @Order(7)
     void deleteActivity_NotFound() throws Exception {
-        mockMvc.perform(delete("/activity/{id}", 10)
+        mockMvc.perform(delete("/activity/{id}", Integer.MAX_VALUE)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
