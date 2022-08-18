@@ -81,7 +81,7 @@ class NoteControllerTest {
     }
 
     @BeforeEach
-    public void setUpRequest() throws NotFoundException {
+    public void setUpRequest() {
         message = new NoteMessage();
         message.setFrom("test@test.com");
         message.setText("Test message");

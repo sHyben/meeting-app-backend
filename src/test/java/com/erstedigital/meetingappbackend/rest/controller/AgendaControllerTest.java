@@ -129,7 +129,6 @@ class AgendaControllerTest {
                         .content(mapper.writeValueAsString(newRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                //.andExpect(status().isNotFound());
                 .andExpect(jsonPath("$.meetingId").value(newRequest.getMeetingId()));
     }
 

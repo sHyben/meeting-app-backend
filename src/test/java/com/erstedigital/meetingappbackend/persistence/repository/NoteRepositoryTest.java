@@ -27,11 +27,6 @@ class NoteRepositoryTest {
         assertThat(repository.findById(note.getId()).get()).isEqualTo(note);
     }
 
-    // TODO
-    @Test
-    void findAllByMeetingId() {
-    }
-
     @Test
     void deleteNote() {
         Note note = new Note();

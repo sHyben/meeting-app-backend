@@ -1,10 +1,8 @@
 package com.erstedigital.meetingappbackend.rest.controller;
 
-import com.erstedigital.meetingappbackend.rest.data.request.AgendaRequest;
 import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import com.erstedigital.meetingappbackend.rest.data.request.PositionRequest;
 import com.erstedigital.meetingappbackend.rest.data.request.UserRequest;
-import com.erstedigital.meetingappbackend.rest.service.AgendaService;
 import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -17,13 +15,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.Date;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,7 +44,6 @@ class MeetingControllerTest {
     @BeforeAll
     public static void setUpRequest() {
         request = new MeetingRequest();
-        request.setOrganizerId(1);
         request.setExchangeId("qwertyuiop1235zxcvbnm");
         request.setActivities(new HashSet<>());
         request.setAttendees(new HashSet<>());
@@ -154,11 +149,6 @@ class MeetingControllerTest {
 
     @Test
     @Order(7)
-    void getMeetingsBetweenDatesFromUser() throws Exception {
-    }
-
-    @Test
-    @Order(8)
     void deleteMeeting() throws Exception {
         mockMvc.perform(delete("/meetings/{id}", currentId)
                         .contentType(MediaType.APPLICATION_JSON))

@@ -60,7 +60,6 @@ class ActivityControllerTest {
                 .andReturn();
 
         String response = result.getResponse().getContentAsString();
-        //Integer id = JsonPath.parse(response).read("$[0].id");
         currentId = JsonPath.parse(response).read("id");
     }
 

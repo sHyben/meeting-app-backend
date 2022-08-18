@@ -1,7 +1,9 @@
 package com.erstedigital.meetingappbackend.rest.controller;
 
+import com.erstedigital.meetingappbackend.rest.data.request.MeetingRequest;
 import com.erstedigital.meetingappbackend.rest.data.request.PositionRequest;
 import com.erstedigital.meetingappbackend.rest.data.request.UserRequest;
+import com.erstedigital.meetingappbackend.rest.service.MeetingService;
 import com.erstedigital.meetingappbackend.rest.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -16,7 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.sql.Date;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -29,8 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserControllerTest {
+
+
     @Autowired
-    UserService userService;
+    MeetingService meetingService;
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -38,6 +44,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     private static UserRequest request;
+
     private static Integer currentId;
 
     @BeforeAll
@@ -129,13 +136,18 @@ class UserControllerTest {
     }
 
     @Test
+    @Order(7)
     void addNewUsers() throws Exception {
         UserRequest newRequest = new UserRequest();
         newRequest.setName("New test name");
+        newRequest.setEmail("newTest@test.com");
+        newRequest.setPositionId(request.getPositionId());
         List<UserRequest> list = Arrays.asList(request, newRequest);
 
         mockMvc.perform(post("/user/attendees")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
                         .content(mapper.writeValueAsString(list)))
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -143,8 +155,47 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[*].id").isNotEmpty());
     }
 
-    // TODO
     @Test
+    @Order(8)
     void getMeetingAttendees() throws Exception {
+        MeetingRequest meetingRequest = new MeetingRequest();
+        meetingRequest.setExchangeId("akjsjhfbkncttfw");
+        meetingRequest.setActivities(new HashSet<>());
+        meetingRequest.setAttendees(new HashSet<>());
+        meetingRequest.setSubject("Test meeting");
+        meetingRequest.setStart(new Date(new java.util.Date().getTime()));
+        meetingRequest.setEnd(new Date(new java.util.Date().getTime()));
+
+        MvcResult result1 = mockMvc.perform(post("/user")
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value(request.getName()))
+                .andReturn();
+
+        String response1 = result1.getResponse().getContentAsString();
+        Integer userId = JsonPath.parse(response1).read("id");
+
+        meetingRequest.setOrganizerId(userId);
+        MvcResult result2 = mockMvc.perform(post("/meetings")
+                        .content(mapper.writeValueAsString(meetingRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.organizerId").value(meetingRequest.getOrganizerId()))
+                .andExpect(jsonPath("$.subject").value(meetingRequest.getSubject()))
+                .andExpect(jsonPath("$.exchangeId").value(meetingRequest.getExchangeId()))
+                .andReturn();
+
+        String response2 = result2.getResponse().getContentAsString();
+        Integer meetingId = JsonPath.parse(response2).read("id");
+
+        mockMvc.perform(get("/user/attendees/{id}", meetingId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("email", request.getEmail()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(userId));
     }
 }

@@ -48,11 +48,6 @@ class UserRepositoryTest {
         assertThat(repository.findByEmail(user.getEmail()).get()).isEqualTo(user);
     }
 
-    // TODO
-    @Test
-    void findMeetingAttendees() {
-    }
-
     @Test
     void deleteUser() {
         User user = new User();

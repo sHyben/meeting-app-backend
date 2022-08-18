@@ -18,7 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -114,10 +116,23 @@ class AgendaPointControllerTest {
         currentId = JsonPath.parse(response).read("id");
     }
 
-    // TODO
     @Test
     @Order(2)
     void addNewAgendaPoints() throws Exception {
+        AgendaPointRequest newRequest = new AgendaPointRequest();
+        newRequest.setTitle("New test title");
+        newRequest.setAgendaId(request.getAgendaId());
+        List<AgendaPointRequest> list = Arrays.asList(request, newRequest);
+
+        mockMvc.perform(post("/agendaPoint/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(mapper.writeValueAsString(list)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[*].id").isNotEmpty());
     }
 
     @Test

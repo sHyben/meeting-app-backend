@@ -23,7 +23,7 @@ public class NoteController {
 
     @GetMapping
     public @ResponseBody
-    List<NoteResponse> getNotesByMeetingId(@RequestParam("meetingId") Integer id) throws NotFoundException {
+    List<NoteResponse> getNotesByMeetingId(@RequestParam("meetingId") Integer id) {
         return noteService.findByMeetingId(id).stream().map(NoteResponse::new).collect(Collectors.toList());
     }
 }

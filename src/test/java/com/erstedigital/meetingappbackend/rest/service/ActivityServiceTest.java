@@ -30,23 +30,6 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class ActivityServiceTest {
-    @SpyBean
-    private ActivityServiceImpl service;
-
-    @MockBean
-    private ActivityRepository repository;
-
-    private ActivityRequest request;
-
-    @BeforeEach
-    public void setUpRequest() {
-        request = new ActivityRequest();
-        request.setType("Test Type");
-        request.setTitle("Test title");
-        request.setText("Test text");
-        request.setAnswer("Test answer");
-        request.setImgUrl("www.test.net");
-    }
 
     @Test
     void getAll() {
@@ -54,14 +37,6 @@ class ActivityServiceTest {
 
     @Test
     void findById() throws NotFoundException {
-/*        Activity activity = new Activity();
-
-        var id = 1;
-        var entity = new Activity();
-        entity.setId(id);
-        when(repository.findById(id)).thenReturn(Optional.of(entity));
-
-        Activity result = service.findById(id);*/
     }
 
     @Test
@@ -70,8 +45,6 @@ class ActivityServiceTest {
 
     @Test
     void create() throws NotFoundException {
-        Activity activity = service.create(request);
-        assertThat(service.findById(activity.getId())).isEqualTo(activity);
     }
 
     @Test

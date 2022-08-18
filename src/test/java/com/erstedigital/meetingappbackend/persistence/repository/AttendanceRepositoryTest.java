@@ -27,11 +27,6 @@ class AttendanceRepositoryTest {
         assertThat(repository.findById(attendance.getId()).get()).isEqualTo(attendance);
     }
 
-    // TODO
-    @Test
-    void findByAttendanceMeeting() {
-    }
-
     @Test
     void deleteAttendance() {
         Attendance attendance = new Attendance();

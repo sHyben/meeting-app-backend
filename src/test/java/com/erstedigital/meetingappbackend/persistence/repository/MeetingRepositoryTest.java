@@ -35,11 +35,6 @@ class MeetingRepositoryTest {
         assertThat(repository.findByExchangeId(meeting.getExchangeId()).get()).isEqualTo(meeting);
     }
 
-    // TODO
-    @Test
-    void getOrganizerMeetings() {
-    }
-
     @Test
     void getAttendeeMeetings() {
     }
