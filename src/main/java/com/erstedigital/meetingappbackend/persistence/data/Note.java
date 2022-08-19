@@ -8,6 +8,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -31,10 +32,14 @@ public class Note {
     private User from;
     private String text;
 
+    @Column(name = "created_at")
+    private Date createdAt;
+
     public Note(Meeting meeting, User user, String text) {
         this.text = text;
         this.meeting = meeting;
         this.from = user;
+        this.createdAt = new Date();
     }
 
     @Override

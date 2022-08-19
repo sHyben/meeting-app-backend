@@ -47,7 +47,7 @@ public class WebSocketController {
 
         messagingTemplate.convertAndSend(
                 "/note/messages/" + meetingId,
-                new NoteOutputMessage(newNote.getId(), newNote.getFrom().getEmail(), newNote.getText(), time)
+                new NoteOutputMessage(newNote.getId(), newNote.getFrom().getEmail(), newNote.getText(), newNote.getCreatedAt())
         );
     }
 

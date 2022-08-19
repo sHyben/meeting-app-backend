@@ -141,6 +141,9 @@ public class MeetingServiceImpl implements MeetingService {
         if(request.getMeetingType() != null) {
             meeting.setMeetingType(request.getMeetingType());
         }
+        if (request.getFeedbackUrl() != null) {
+            meeting.setFeedbackUrl(request.getFeedbackUrl());
+        }
         if(request.getFeedbackType() != null) {
             meeting.setFeedbackType(request.getFeedbackType());
         }

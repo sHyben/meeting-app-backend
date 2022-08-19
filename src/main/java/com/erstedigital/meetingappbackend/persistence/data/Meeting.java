@@ -35,6 +35,10 @@ public class Meeting {
     private String apolloCode;
     @Column(name = "feedback_type")
     private String feedbackType;
+
+    @Column(name = "feedback_url")
+    private String feedbackUrl;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date start;
     @Column(name = "actual_start")
@@ -95,6 +99,7 @@ public class Meeting {
         this.description = request.getDescription();
         this.meetingType = request.getMeetingType();
         this.feedbackType = request.getFeedbackType();
+        this.feedbackUrl = request.getFeedbackUrl();
         this.start = request.getStart();
         this.actualStart = request.getActualStart();
         this.end = request.getEnd();
